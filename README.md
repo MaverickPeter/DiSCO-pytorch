@@ -36,6 +36,11 @@ python inference.py
 
 Take a look at train_DiSCO.py and evaluate.py for more parameters
 
+## Pretrained Model on NCLT dataset
+```
+https://drive.google.com/file/d/1VU9OtA0Q9t0nht5GcDc_0qQ9bVEit2lP/view?usp=sharing
+```
+
 ## Acknowledgements
 
 Code references [PointNetVLAD](https://github.com/cattaneod/PointNetVlad-Pytorch)
