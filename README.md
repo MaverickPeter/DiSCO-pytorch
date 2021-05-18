@@ -13,7 +13,7 @@ Video is available [here](https://youtu.be/SludumGuLYo).
 ![teaser](./doc/Teaser.png)
 
 ## Pre-Requisites
-* PyTorch 1.4.0
+* PyTorch 1.4.0 (<= 1.6.0 fft module is modified after 1.6.0)
 * tensorboardX
 * Cython
 
