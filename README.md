@@ -29,9 +29,18 @@ python train_DiSCO.py --dataset_folder $DATASET_FOLDER
 python evaluate.py --dataset_folder $DATASET_FOLDER
 ```
 
+## Utility
+
+```
+python evaluate.py --dataset_folder $DATASET_FOLDER
+```
+
 ## Infer
+
 ```
 python inference.py
+# infer in ros
+python infer_ros.py
 ```
 
 Take a look at train_DiSCO.py and evaluate.py for more parameters
