@@ -13,7 +13,7 @@ Video is available [here](https://youtu.be/SludumGuLYo).
 ![teaser](./doc/Teaser.png)
 
 ## Pre-Requisites
-* PyTorch 1.4.0
+* PyTorch 1.4.0 (<= 1.6.0 fft module is modified after 1.6.0)
 * tensorboardX
 * Cython
 
@@ -44,6 +44,11 @@ python infer_ros.py
 ```
 
 Take a look at train_DiSCO.py and evaluate.py for more parameters
+
+## Pretrained Model on NCLT dataset
+```
+https://drive.google.com/file/d/1VU9OtA0Q9t0nht5GcDc_0qQ9bVEit2lP/view?usp=sharing
+```
 
 ## Acknowledgements
 
