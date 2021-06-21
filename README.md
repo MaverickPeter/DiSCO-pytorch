@@ -44,6 +44,7 @@ python infer_ros.py
 ```
 
 Take a look at train_DiSCO.py and evaluate.py for more parameters
+**We found that our model works well in cpu, only takes 50-80ms one inference.**
 
 ## Pretrained Model on NCLT dataset
 ```
