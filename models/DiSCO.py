@@ -10,8 +10,12 @@ from torchvision import transforms, utils
 import matplotlib.pyplot as plt
 import math
 import time
-import gpuadder
+import gputransform
 import config as cfg
+
+######################
+# PointNetVLAD Network
+######################
 
 class NetVLADLoupe(nn.Module):
     def __init__(self, feature_size, max_samples, cluster_size, output_dim,
@@ -181,7 +185,6 @@ class STN3d(nn.Module):
         return x
 
 
-
 class PointNetfeat(nn.Module):
     def __init__(self, num_points=2500, global_feat=True, feature_transform=False, max_pool=True):
         super(PointNetfeat, self).__init__()
@@ -233,6 +236,26 @@ class PointNetfeat(nn.Module):
                 x = x.view(-1, 1024, 1).repeat(1, 1, self.num_points)
                 return torch.cat([x, pointfeat], 1), trans
 
+
+class PointNetVlad(nn.Module):
+    def __init__(self, num_points=2500, global_feat=True, feature_transform=False, max_pool=True, output_dim=1024):
+        super(PointNetVlad, self).__init__()
+        self.point_net = PointNetfeat(num_points=num_points, global_feat=global_feat,
+                                      feature_transform=feature_transform, max_pool=max_pool)
+        self.net_vlad = NetVLADLoupe(feature_size=1024, max_samples=num_points, cluster_size=64,
+                                     output_dim=output_dim, gating=True, add_batch_norm=True,
+                                     is_training=True)
+
+    def forward(self, x):
+        x = self.point_net(x)
+        x = self.net_vlad(x)
+        return x
+
+
+###############
+# DiSCO Network
+###############
+
 def double_conv(in_channels, out_channels):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, 3, padding=1),
@@ -253,6 +276,7 @@ def last_conv(in_channels, out_channels):
         nn.Sigmoid()
     )    
 
+
 def fftshift2d(x):
     for dim in range(1, len(x.size())):
         n_shift = x.size(dim)//2
@@ -261,12 +285,14 @@ def fftshift2d(x):
         x = roll_n(x, axis=dim, n=n_shift)
     return x  # last dim=2 (real&imag)
 
+
 def roll_n(X, axis, n):
     f_idx = tuple(slice(None, None, None) if i != axis else slice(0, n, None) for i in range(X.dim()))
     b_idx = tuple(slice(None, None, None) if i != axis else slice(n, None, None) for i in range(X.dim()))
     front = X[f_idx]
     back = X[b_idx]
     return torch.cat([back, front], axis)
+
 
 def imshow(tensor, title=None):
     unloader = transforms.ToPILImage()
@@ -276,43 +302,32 @@ def imshow(tensor, title=None):
     plt.imshow(image, cmap='jet')
     plt.show()
 
-class SCNet(nn.Module):
-    def __init__(self, num_points=2500, global_feat=True, feature_transform=False, max_pool=True, output_dim=1024):
-        super(SCNet, self).__init__()
 
-        self.point_net = PointNetfeat(num_points=24000, global_feat=global_feat,
-                                      feature_transform=feature_transform, max_pool=max_pool)
-        
+class DiSCO(nn.Module):
+    def __init__(self, output_dim):
+        super(DiSCO, self).__init__()
+
+        self.out_dim = output_dim
+        self.col = int(np.sqrt(self.out_dim)/2)
         self.unet = UNet(cfg.num_height)
-        self.mask = UNet(cfg.num_height)
-
         self.device = torch.device("cuda:0")
-        self.pr_conv = double_conv(1, 1)
-        self.yaw_conv = double_conv(1, 1)
 
     def forward_fft(self, input):
-        #input = input.squeeze(1)
         median_output = torch.rfft(input, 2, normalized=True, onesided=False)
         median_output_r = median_output[:, :, :, :, 0]
         median_output_i = median_output[:, :, :, :, 1]
         output = torch.sqrt(median_output_r ** 2 + median_output_i ** 2 + 1e-15)
         output = fftshift2d(output)
-        #output = output.unsqueeze(1)
         return output, median_output
         
     def forward_column_fft(self, input):
-        #input = input.squeeze(1)
         batchsize = input.shape[0]
         row = input.shape[2]
         col = input.shape[3]
-        # input = input.reshape(batchsize,-1)
         median_output = torch.rfft(input, 1, normalized=True, onesided=False)
         median_output_r = median_output[...,0]
         median_output_i = median_output[...,1]
         output = torch.sqrt(median_output_r ** 2 + median_output_i ** 2 + 1e-15)
-        # output.reshape(batchsize, 1, row, col)
-        #output = fftshift2d(output)
-        #output = output.unsqueeze(1)
         return output, median_output
 
     def forward(self, x):
@@ -323,7 +338,7 @@ class SCNet(nn.Module):
         out, fft_result = self.forward_fft(unet_out)
         
         x = out.squeeze(1)
-        x = x[:, (cfg.num_ring//2-16):(cfg.num_ring//2+16), (cfg.num_sector//2-16):(cfg.num_sector//2+16)]
+        x = x[:, (cfg.num_ring//2 - self.col):(cfg.num_ring//2 + self.col), (cfg.num_sector//2 - self.col):(cfg.num_sector//2 + self.col)]
         x = x.reshape(batchsize, -1)
 
         return x, out, fft_result, unet_out
@@ -424,17 +439,3 @@ def phase_corr(a, b, device):
     angle = torch.max(corr_marginize)
  
     return angle, corr
-
-class PointNetVlad(nn.Module):
-    def __init__(self, num_points=2500, global_feat=True, feature_transform=False, max_pool=True, output_dim=1024):
-        super(PointNetVlad, self).__init__()
-        self.point_net = PointNetfeat(num_points=num_points, global_feat=global_feat,
-                                      feature_transform=feature_transform, max_pool=max_pool)
-        self.net_vlad = NetVLADLoupe(feature_size=1024, max_samples=num_points, cluster_size=64,
-                                     output_dim=output_dim, gating=True, add_batch_norm=True,
-                                     is_training=True)
-
-    def forward(self, x):
-        x = self.point_net(x)
-        x = self.net_vlad(x)
-        return x

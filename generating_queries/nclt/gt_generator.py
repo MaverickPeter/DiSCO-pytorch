@@ -10,8 +10,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import math
 
 # config
-BASE_DIR = "./pointnetvlad_dataset/benchmark_datasets/"
-base_path = "./pointnetvlad_dataset/benchmark_datasets/"
+BASE_DIR = "/media/mav-lab/1T/Data/Datasets/pointnetvlad_dataset/benchmark_datasets/"
+base_path = "/media/mav-lab/1T/Data/Datasets/pointnetvlad_dataset/benchmark_datasets/"
 
 runs_folder = "oxford_test/"
 filename = "pointcloud_locations_20m_10overlap.csv"
@@ -26,6 +26,7 @@ folders = []
 # All runs are used for training (both full and partial)
 index_list = range(len(all_folders)-1)
 print("Number of runs: "+str(len(index_list)))
+
 for index in index_list:
     folders.append(all_folders[index])
 print(folders)
@@ -41,8 +42,10 @@ def find_closest_timestamp(A, target):
     idx -= target - left < right - target
     return idx
 
+
 # Initialize pandas DataFrame
 ins = pd.DataFrame(columns=['timestamp','yaw'])
+
 
 for folder in folders:
 
@@ -51,7 +54,7 @@ for folder in folders:
         base_path,runs_folder,folder,gps_filename),sep=',')
     df_locations = pd.read_csv(os.path.join(
         base_path,runs_folder,folder,filename),sep=',')
-
+    
     # convert data type
     df_locations['timestamp'] = df_locations['timestamp'].astype(str)
     df_locations['yaw'] = 0.0

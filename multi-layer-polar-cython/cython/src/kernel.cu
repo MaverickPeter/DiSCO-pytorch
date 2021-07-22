@@ -36,7 +36,9 @@ float __device__ xy2theta(const float & _x, const float & _y )
         return 360 - ( (180/M_PI) * atan((-_y) / _x) );
 } // xy2theta
 
-void __global__ point2gridmap(float* point, int* ring, int* sector, int* height, int d_size, int max_length, int num_ring, int num_sector, int num_height) 
+
+// convert pointcloud to grid map
+void __global__ point2gridmap(float* point, int* ring, int* sector, int* height, int d_size, int max_length, int max_height, int num_ring, int num_sector, int num_height) 
 {
     int gid = threadIdx.x + blockDim.x*blockIdx.x;
     
@@ -46,7 +48,7 @@ void __global__ point2gridmap(float* point, int* ring, int* sector, int* height,
 
     gap_ring = (float)max_length / (float)num_ring;
     gap_sector = 360.0/(float)num_sector;
-    gap_height = 2.0 / (float)num_height;
+    gap_height = 2.0 * (float)max_height / (float)num_height;
 
     float x, y, z;
     x = point[gid];
@@ -60,16 +62,12 @@ void __global__ point2gridmap(float* point, int* ring, int* sector, int* height,
     if(z == 0.0)
         z = 0.0001;
 
-
     float theta = xy2theta(x, y);
     float faraway = sqrt(pow(x,2) + pow(y,2));
 
     int idx_ring = floor(faraway / gap_ring);
     int idx_sector = floor(theta / gap_sector);
-    int idx_height = floor((z + 1.0) / gap_height);
-    
-    //int idx_ring = max(min( num_ring, int(ceil( (faraway / max_length) * num_ring )) ), 1 );
-    //int idx_sector = max(min( num_sector, int(ceil( (theta / 360.0) * num_sector )) ), 1 );
+    int idx_height = floor((z + (float)max_height) / gap_height);
 
     if(idx_ring >= num_ring)
        idx_ring = num_ring - 1;
@@ -77,7 +75,7 @@ void __global__ point2gridmap(float* point, int* ring, int* sector, int* height,
     height[gid] = idx_height;
     ring[gid] = idx_ring;
     sector[gid] = idx_sector;
-    // printf("height, %d\n",idx_height);
+
     __syncthreads();  
 }
 

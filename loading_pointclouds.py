@@ -6,7 +6,7 @@ import config as cfg
 import struct
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import gpuadder
+import gputransform
 import time
 
 def get_queries_dict(filename):
@@ -24,6 +24,7 @@ def get_sets_dict(filename):
         print("Trajectories Loaded.")
         return trajectories
 
+
 def convert(x_s, y_s, z_s):
 
     scaling = 0.005 # 5 mm
@@ -35,10 +36,9 @@ def convert(x_s, y_s, z_s):
 
     return x, y, z
 
+
 def load_lidar_file_nclt(file_path):
     n_vec = 4
-    # dtype = np.float32
-    # lidar_pc_raw = np.fromfile(file_path, dtype)
     f_bin = open(file_path,'rb')
 
     hits = []
@@ -57,9 +57,10 @@ def load_lidar_file_nclt(file_path):
 
         x, y, z = convert(x, y, z)
         s = "%5.3f, %5.3f, %5.3f, %d, %d" % (x, y, z, i, l)
+
+        # filter and normalize the point cloud to -1 ~ 1
         if np.abs(x) < 70. and z > -20. and z < -2. and np.abs(y) < 70. and not(np.abs(x) < 5. and np.abs(y) < 5.):
             hits += [[x/70., y/70., z/20.]]
-        # hits += [[x, y, z]]
 
     f_bin.close()
     hits = np.asarray(hits)
@@ -72,23 +73,24 @@ def load_pc_file_infer(filename):
     # returns Nx3 matrix
     pc = load_lidar_file_nclt(filename)  
     size = pc.shape[0]
-    pc_point = np.zeros([cfg.num_height * cfg.num_ring * cfg.num_sector])
+    pc_img = np.zeros([cfg.num_height * cfg.num_ring * cfg.num_sector])
     pc = pc.transpose().flatten().astype(np.float32)
 
-    transer = gpuadder.GPUTransformer(pc, size, cfg.max_length, cfg.num_ring, cfg.num_sector, cfg.num_height, 1)
+    transer = gputransform.GPUTransformer(pc, size, cfg.max_length, cfg.max_height, cfg.num_ring, cfg.num_sector, cfg.num_height, cfg.overlap_num)
     transer.transform()
     point_t = transer.retreive()
     point_t = point_t.reshape(-1, 3)
     point_t = point_t[...,2]
-    pc_point = point_t.reshape(cfg.num_height, cfg.num_ring, cfg.num_sector)
+    pc_img = point_t.reshape(cfg.num_height, cfg.num_ring, cfg.num_sector)
     
-    return pc_point
+    return pc_img
 
 
 def load_pc_infer(pc):
     # returns Nx3 matrix
     pc = np.array(pc, dtype=np.float32)
 
+    # filter in inference step
     hits = pc[np.where((np.abs(pc[:,0]) < 70.)&(np.abs(pc[:,1]) < 70.)&(np.abs(pc[:,2]) < 20.)&(np.abs(pc[:,2]) > 2.)&(np.abs(pc[:,0]) > 5.)&(np.abs(pc[:,1]) > 5.))]
     hits[...,0] = hits[...,0] / 70.
     hits[...,1] = hits[...,1] / 70.
@@ -99,36 +101,31 @@ def load_pc_infer(pc):
     pc = np.array(hits, dtype=np.float32)
     size = pc.shape[0]
 
-    pc_point = np.zeros([cfg.num_height * cfg.num_ring * cfg.num_sector])
+    pc_img = np.zeros([cfg.num_height * cfg.num_ring * cfg.num_sector])
     pc = pc.transpose().flatten().astype(np.float32)
 
-    transer = gpuadder.GPUTransformer(pc, size, cfg.max_length, cfg.num_ring, cfg.num_sector, cfg.num_height, 1)
+    transer = gputransform.GPUTransformer(pc, size, cfg.max_length, cfg.max_height, cfg.num_ring, cfg.num_sector, cfg.num_height, cfg.overlap_num)
     transer.transform()
     point_t = transer.retreive()
     point_t = point_t.reshape(-1, 3)
     point_t = point_t[...,2]
-    pc_point = point_t.reshape(cfg.num_height, cfg.num_ring, cfg.num_sector)
+    pc_img = point_t.reshape(cfg.num_height, cfg.num_ring, cfg.num_sector)
     
-    return pc_point
+    return pc_img
+
 
 def load_pc_file(filename):
-
     filename = filename.replace('.bin','.npy')
     filename = filename.replace('/velodyne_sync/','/sc_density_0.5m/')
-    # print("filename",filename)
-    pc_point = np.load(filename)
-    
+    pc_img = np.load(filename)
 
-    return pc_point
+    return pc_img
 
 
 def load_pc_files(filenames):
     pcs = []
     for filename in filenames:
-        # print(filename)
         pc = load_pc_file(filename)
-        # if(pc.shape[0] != 4096):
-        #     continue
         pcs.append(pc)
     pcs = np.array(pcs)
     return pcs
@@ -173,8 +170,8 @@ def jitter_point_cloud(batch_data, sigma=0.005, clip=0.05):
 
 
 def get_query_tuple(dict_value, num_pos, num_neg, QUERY_DICT, hard_neg=[], other_neg=False):
-        # get query tuple for dictionary entry
-        # return list [query,positives,negatives]
+    # get query tuple for dictionary entry
+    # return list [query,positives,negatives]
     heading = []
     query = load_pc_file(dict_value["query"])  # Nx3
     heading.append(dict_value["heading"])
@@ -185,8 +182,6 @@ def get_query_tuple(dict_value, num_pos, num_neg, QUERY_DICT, hard_neg=[], other
     for i in range(num_pos):
         pos_files.append(QUERY_DICT[dict_value["positives"][i]]["query"])
         heading.append(QUERY_DICT[dict_value["positives"][i]]["heading"])
-    #print("northing", QUERY_DICT[dict_value["positives"][i]]["query"])
-    #positives= load_pc_files(dict_value["positives"][0:num_pos])
     positives = load_pc_files(pos_files)
 
     neg_files = []
@@ -305,7 +300,6 @@ def get_rotated_tuple(dict_value, num_pos, num_neg, QUERY_DICT, hard_neg=[], oth
 
 def get_jittered_tuple(dict_value, num_pos, num_neg, QUERY_DICT, hard_neg=[], other_neg=False):
     query = load_pc_file(dict_value["query"])  # Nx3
-    #q_rot= rotate_point_cloud(np.expand_dims(query, axis=0))
     q_jit = jitter_point_cloud(np.expand_dims(query, axis=0))
     q_jit = np.squeeze(q_jit)
 
@@ -313,7 +307,6 @@ def get_jittered_tuple(dict_value, num_pos, num_neg, QUERY_DICT, hard_neg=[], ot
     pos_files = []
     for i in range(num_pos):
         pos_files.append(QUERY_DICT[dict_value["positives"][i]]["query"])
-    #positives= load_pc_files(dict_value["positives"][0:num_pos])
     positives = load_pc_files(pos_files)
     p_jit = jitter_point_cloud(positives)
 

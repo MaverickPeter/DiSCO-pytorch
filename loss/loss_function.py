@@ -38,11 +38,9 @@ def phase_corr(a, b, device):
     corr_marginize = torch.sum(corr, 3, keepdim=False)
     angle = torch.max(corr_marginize)
     corr_softmax = nn.functional.softmax(corr_marginize.clone(), dim=-1)
-
-    # indice = np.linspace(0, 1, cfg.num_sector)
-    # indice = torch.tensor(np.reshape(indice, (-1, cfg.num_sector))).to(device)
-    # angle = torch.sum((cfg.num_sector - 1) * corr_softmax * indice, dim=-1)     
+   
     return angle, corr
+
 
 def one_dim_phase_corr(a, b, device):
     # a: template; b: source
@@ -79,6 +77,7 @@ def one_dim_phase_corr(a, b, device):
     angle = torch.sum((cfg.num_sector - 1) * corr_softmax * indice, dim=-1)     
     return angle, corr, corr_marginize
 
+
 def fftshift2d(x):
     for dim in range(1, len(x.size())):
         n_shift = x.size(dim)//2
@@ -87,12 +86,14 @@ def fftshift2d(x):
         x = roll_n(x, axis=dim, n=n_shift)
     return x  # last dim=2 (real&imag)
 
+
 def roll_n(X, axis, n):
     f_idx = tuple(slice(None, None, None) if i != axis else slice(0, n, None) for i in range(X.dim()))
     b_idx = tuple(slice(None, None, None) if i != axis else slice(n, None, None) for i in range(X.dim()))
     front = X[f_idx]
     back = X[b_idx]
     return torch.cat([back, front], axis)
+
 
 def best_pos_distance(query, pos_vecs):
     num_pos = pos_vecs.shape[1]
@@ -221,6 +222,7 @@ def quadruplet_loss(q_vec, pos_vecs, neg_vecs, other_neg, corr2soft, fft_result,
 
     return total_loss, yaw_ce_loss, yaw_loss_l1, corr
 
+
 def GT_angle_convert(this_gt, size):
     for batch_num in range(this_gt.shape[0]):
         if this_gt[batch_num] >= 90:
@@ -232,6 +234,7 @@ def GT_angle_convert(this_gt, size):
             this_gt[batch_num] = this_gt[batch_num] - 1
     return this_gt.long()
 
+
 def GT_angle_sc_convert(this_gt, size):
     for batch_num in range(this_gt.shape[0]):
         if this_gt[batch_num] >= 90:
@@ -242,6 +245,7 @@ def GT_angle_sc_convert(this_gt, size):
         if this_gt[batch_num].long() == size:
             this_gt[batch_num] = this_gt[batch_num] - 1
     return this_gt.long()
+
 
 def imshow(tensor, title=None):
     unloader = transforms.ToPILImage()

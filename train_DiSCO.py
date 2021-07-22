@@ -20,7 +20,7 @@ from loading_pointclouds import *
 from tensorboardX import SummaryWriter
 from torch.autograd import Variable
 from torch.backends import cudnn
-import gpuadder
+import gputransform
 import cv2
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -28,7 +28,6 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
 cudnn.enabled = True
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--log_dir', default='log/', help='Log dir [default: log]')
@@ -68,14 +67,9 @@ parser.add_argument('--resume', action='store_true',
                     help='If present, restore checkpoint and resume training')
 parser.add_argument('--dataset_folder', default='../../dataset/',
                     help='PointNetVlad Dataset Folder')
-parser.add_argument('--input_type', default='image',
-                    help='Input of the network, can be [point] or scan [image], [default: point]')
+
 
 FLAGS = parser.parse_args()
-cfg.BATCH_NUM_QUERIES = 1
-#cfg.EVAL_BATCH_SIZE = 12
-cfg.NUM_POINTS = 4096
-cfg.INPUT_TYPE = FLAGS.input_type
 cfg.TRAIN_POSITIVES_PER_QUERY = FLAGS.positives_per_query
 cfg.TRAIN_NEGATIVES_PER_QUERY = FLAGS.negatives_per_query
 cfg.MAX_EPOCH = FLAGS.max_epoch
@@ -86,29 +80,20 @@ cfg.DECAY_STEP = FLAGS.decay_step
 cfg.DECAY_RATE = FLAGS.decay_rate
 cfg.MARGIN1 = FLAGS.margin_1
 cfg.MARGIN2 = FLAGS.margin_2
-cfg.FEATURE_OUTPUT_DIM = 256
 cfg.LOSS_FUNCTION = FLAGS.loss_function
 cfg.TRIPLET_USE_BEST_POSITIVES = FLAGS.triplet_use_best_positives
 cfg.LOSS_LAZY = FLAGS.loss_not_lazy
 cfg.LOSS_IGNORE_ZERO_BATCH = FLAGS.loss_ignore_zero_batch
-cfg.overlap_num = 1
-cfg.num_ring = 40
-cfg.num_sector = 120
-cfg.num_height = 20
-cfg.max_length = 1
-
-cfg.TRAIN_FILE = '/home/xxc/data1/xxc/NCLT_kit/nclt_generating_queries/training_queries_baseline_sc_density.pickle'
-cfg.TEST_FILE = '/home/xxc/data1/xxc/NCLT_kit/nclt_generating_queries/test_queries_baseline_sc_density.pickle'
 
 cfg.LOG_DIR = FLAGS.log_dir
+cfg.RESULTS_FOLDER = FLAGS.results_dir
+cfg.DATASET_FOLDER = FLAGS.dataset_folder
+
 if not os.path.exists(cfg.LOG_DIR):
     os.mkdir(cfg.LOG_DIR)
 LOG_FOUT = open(os.path.join(cfg.LOG_DIR, 'log_train.txt'), 'w')
 LOG_FOUT.write(str(FLAGS) + '\n')
 
-cfg.RESULTS_FOLDER = FLAGS.results_dir
-
-cfg.DATASET_FOLDER = FLAGS.dataset_folder
 
 # Load dictionary of training queries
 TRAINING_QUERIES = get_queries_dict(cfg.TRAIN_FILE)
@@ -140,8 +125,8 @@ def log_string(out_str):
     LOG_FOUT.flush()
     print(out_str)
 
-# learning rate halfed every 5 epoch
 
+# learning rate halfed every 5 epoch
 def get_learning_rate(epoch):
     learning_rate = cfg.BASE_LEARNING_RATE * ((0.9) ** (epoch // 5))
     learning_rate = max(learning_rate, 0.00001)  # CLIP THE LEARNING RATE!
@@ -152,27 +137,20 @@ def train():
     global HARD_NEGATIVES, TOTAL_ITERATIONS
     bn_decay = get_bn_decay(0)
 
-    if cfg.LOSS_FUNCTION == 'quadruplet'and cfg.INPUT_TYPE == 'point':
+    if cfg.LOSS_FUNCTION == 'quadruplet':
         loss_function = SC_loss.quadruplet_loss
-    elif cfg.INPUT_TYPE == 'image':
-        loss_function = SC_loss.quadruplet_loss
-    else:
-        loss_function = SC_loss.quadruplet_loss
-    learning_rate = get_learning_rate(0)
+    elif cfg.LOSS_FUNCTION == 'triplet':
+        loss_function = SC_loss.triplet_loss
 
+    learning_rate = get_learning_rate(0)
     train_writer = SummaryWriter(os.path.join(cfg.LOG_DIR, 'train'))
 
     # -------------- Model formation -----------------
-    if cfg.INPUT_TYPE == 'point':
-        model = SC.PointNetVlad(global_feat=True, feature_transform=True,
-                                max_pool=False, output_dim=cfg.FEATURE_OUTPUT_DIM, num_points=cfg.NUM_POINTS)
-    elif cfg.INPUT_TYPE == 'image':
-        model = SC.SCNet(global_feat=True, feature_transform=True,
-                                max_pool=False, output_dim=cfg.FEATURE_OUTPUT_DIM, num_points=cfg.NUM_POINTS)
-        corr2soft = SC.Corr2Softmax(200., 0.)
+    model = SC.DiSCO(output_dim = cfg.FEATURE_OUTPUT_DIM)
+    corr2soft = SC.Corr2Softmax(200., 0.)
 
-    corr2soft = corr2soft.to(device)
     model = model.to(device)
+    corr2soft = corr2soft.to(device)
 
     parameters = filter(lambda p: p.requires_grad, model.parameters())
 
@@ -239,8 +217,8 @@ def train_one_epoch(model, optimizer, corr2soft, optimizer_c2s, train_writer, lo
     train_file_idxs = np.arange(0, len(TRAINING_QUERIES.keys()))
     np.random.shuffle(train_file_idxs)
 
+    # iter all batch
     for i in range(len(train_file_idxs)//cfg.BATCH_NUM_QUERIES):
-        # for i in range (5):
         batch_keys = train_file_idxs[i *
                                      cfg.BATCH_NUM_QUERIES:(i+1)*cfg.BATCH_NUM_QUERIES]
         q_tuples = []
@@ -293,10 +271,6 @@ def train_one_epoch(model, optimizer, corr2soft, optimizer_c2s, train_writer, lo
                 # q_tuples.append(get_rotated_tuple(TRAINING_QUERIES[batch_keys[j]],POSITIVES_PER_QUERY,NEGATIVES_PER_QUERY, TRAINING_QUERIES, hard_negs, other_neg=True))
                 # q_tuples.append(get_jittered_tuple(TRAINING_QUERIES[batch_keys[j]],POSITIVES_PER_QUERY,NEGATIVES_PER_QUERY, TRAINING_QUERIES, hard_negs, other_neg=True))
 
-            # if (q_tuples[j][3].shape[0] != cfg.NUM_POINTS):
-            #     no_other_neg = True
-            #     break
-
         if(faulty_tuple):
             log_string('----' + str(i) + '-----')
             log_string('----' + 'FAULTY TUPLE' + '-----')
@@ -331,9 +305,12 @@ def train_one_epoch(model, optimizer, corr2soft, optimizer_c2s, train_writer, lo
 
         model.train()
         optimizer.zero_grad()
+
+        # Augmentation: add random yaw to the original data
         heading = heading.squeeze()
         randomYaw = (np.random.rand() - 0.5) * 360.
 
+        # apply random incremental yaw on the Scan Context image (actually add translation)
         for dim in range(queries.shape[2]):
             queries[0,0,dim,...] = rotation_on_SCI(queries[0,0,dim,...], randomYaw)
         
@@ -343,19 +320,20 @@ def train_one_epoch(model, optimizer, corr2soft, optimizer_c2s, train_writer, lo
 
         
         # -------------------- Run Model ------------------------------
-        import time
-        time_start = time.time()
+        # run model
         output_queries, output_positives, output_negatives, output_other_neg, outfft, fft_result, unet_out = run_model(model, queries, positives, negatives, other_neg)
-        time_end = time.time()
-        print("forward time: ", time_end - time_start)
-        loss, yaw_loss, yaw_loss_l1, corr = loss_function(output_queries, output_positives, output_negatives, output_other_neg, corr2soft, fft_result, heading, randomYaw, cfg.MARGIN_1, cfg.MARGIN_2, use_min=cfg.TRIPLET_USE_BEST_POSITIVES, lazy=cfg.LOSS_LAZY, ignore_zero_loss=cfg.LOSS_IGNORE_ZERO_BATCH)  # time_start = time.time()
-        
+ 
+        # calculate loss
+        loss, yaw_loss, yaw_loss_l1, corr = loss_function(output_queries, output_positives, output_negatives, output_other_neg, corr2soft, fft_result, heading, randomYaw, cfg.MARGIN_1, cfg.MARGIN_2, use_min=cfg.TRIPLET_USE_BEST_POSITIVES, lazy=cfg.LOSS_LAZY, ignore_zero_loss=cfg.LOSS_IGNORE_ZERO_BATCH)
         loss.backward()
+
         optimizer.step()
         optimizer_c2s.step()
 
         log_string('batch loss: %f' % (loss - yaw_loss))
         log_string('batch yaw loss: %f' % yaw_loss_l1)
+
+        # visualization
         train_writer.add_scalar("Loss", (loss - yaw_loss).cpu().item(), TOTAL_ITERATIONS)
         train_writer.add_scalar("Yaw_Loss", yaw_loss.cpu().item(), TOTAL_ITERATIONS)
         train_writer.add_scalar("Yaw_Loss_L1", yaw_loss_l1.cpu().item(), TOTAL_ITERATIONS)
@@ -393,19 +371,16 @@ def get_feature_representation(filename, model):
     model.eval()
     queries = load_pc_files([filename])
     queries = np.array(queries, dtype=np.float32)
-        
 
     with torch.no_grad():
         feed_tensor = torch.from_numpy(queries).float()
-        # feed_tensor = feed_tensor.unsqueeze(1)
-        #feed_tensor = feed_tensor[...,2]
         feed_tensor = feed_tensor.to(device)
         feed_tensor = feed_tensor.view((-1, cfg.num_height, cfg.num_ring, cfg.num_sector))
         output, outfft, fft_result, unet_out = model(feed_tensor)
     output = output.detach().cpu().numpy()
-    #output = output.squeeze(1)
     output = output.reshape(output.shape[1],-1)
     model.train()
+    
     return output
 
 
@@ -419,12 +394,13 @@ def get_random_hard_negatives(query_vec, random_negs, num_to_take):
     latent_vecs = np.array(latent_vecs)
     query_vec = np.squeeze(np.array([query_vec]))
     query_vec = query_vec.reshape(1,-1)
-    #print("query_vec",query_vec.shape)
-    #print("latent_vecs",latent_vecs.shape)
+
     nbrs = KDTree(latent_vecs)
     distances, indices = nbrs.query(query_vec, k=num_to_take)
+    
     hard_negs = np.squeeze(np.array(random_negs)[indices[0]])
     hard_negs = hard_negs.tolist()
+    
     return hard_negs
 
 
@@ -449,11 +425,12 @@ def get_latent_vectors(model, dict_to_process):
         feed_tensor = torch.from_numpy(queries).float()
         feed_tensor = feed_tensor.to(device)
         feed_tensor = feed_tensor.view((-1, cfg.num_height, cfg.num_ring, cfg.num_sector))
+        
+        # run model and get latent vector
         with torch.no_grad():
             out, outfft, fft_result, unet_out = model(feed_tensor)
 
         out = out.detach().cpu().numpy()
-
         q_output.append(out)
 
     q_output = np.array(q_output)
@@ -465,12 +442,11 @@ def get_latent_vectors(model, dict_to_process):
         index = train_file_idxs[q_index]
         queries = load_pc_files([dict_to_process[index]["query"]])
         queries = np.array(queries, dtype=np.float32)
-        
+
+        # run model and get latent vector
         with torch.no_grad():
             feed_tensor = torch.from_numpy(queries).float()
-            #feed_tensor = feed_tensor[...,2]
             feed_tensor = feed_tensor.to(device)
-
             feed_tensor = feed_tensor.view((-1, cfg.num_height, cfg.num_ring, cfg.num_sector))
             o1, outfft, fft_result, unet_out = model(feed_tensor)
 
@@ -487,32 +463,33 @@ def get_latent_vectors(model, dict_to_process):
 
 
 def run_model(model, queries, positives, negatives, other_neg, require_grad=True): 
-    # ------------------------- INPUT_TYPE IMAGE--------------------------------
-    if cfg.INPUT_TYPE == 'image':
+    # prep data
+    queries_tensor = torch.from_numpy(queries).float()
+    positives_tensor = torch.from_numpy(positives).float()
+    negatives_tensor = torch.from_numpy(negatives).float()
+    other_neg_tensor = torch.from_numpy(other_neg).float()
 
-        queries_tensor = torch.from_numpy(queries).float()
-        positives_tensor = torch.from_numpy(positives).float()
-        negatives_tensor = torch.from_numpy(negatives).float()
-        other_neg_tensor = torch.from_numpy(other_neg).float()
+    feed_tensor = torch.cat(
+        (queries_tensor, positives_tensor, negatives_tensor, other_neg_tensor), 1)
+    feed_tensor_vis = feed_tensor.clone()
+    feed_tensor = feed_tensor.view((-1, cfg.num_height, cfg.num_ring, cfg.num_sector))
+    feed_tensor.requires_grad_(require_grad)
+    feed_tensor = feed_tensor.to(device)
 
-        feed_tensor = torch.cat(
-            (queries_tensor, positives_tensor, negatives_tensor, other_neg_tensor), 1)
-        feed_tensor_vis = feed_tensor.clone()
-        feed_tensor = feed_tensor.view((-1, cfg.num_height, cfg.num_ring, cfg.num_sector))
-        feed_tensor.requires_grad_(require_grad)
-        feed_tensor = feed_tensor.to(device)
-
-        if require_grad:
+    # run model
+    if require_grad:
+        output, outfft, fft_result, unet_out = model(feed_tensor)
+    else:
+        with torch.no_grad():
             output, outfft, fft_result, unet_out = model(feed_tensor)
-        else:
-            with torch.no_grad():
-                output, outfft, fft_result, unet_out = model(feed_tensor)
 
-        output = output.view(cfg.BATCH_NUM_QUERIES, -1, cfg.FEATURE_OUTPUT_DIM)
-        o1, o2, o3, o4 = torch.split(
-            output, [1, cfg.TRAIN_POSITIVES_PER_QUERY, cfg.TRAIN_NEGATIVES_PER_QUERY, 1], dim=1)
+    # split data for calculate loss
+    output = output.view(cfg.BATCH_NUM_QUERIES, -1, cfg.FEATURE_OUTPUT_DIM)
+    o1, o2, o3, o4 = torch.split(
+        output, [1, cfg.TRAIN_POSITIVES_PER_QUERY, cfg.TRAIN_NEGATIVES_PER_QUERY, 1], dim=1)
 
-        return o1, o2, o3, o4, outfft, fft_result, unet_out
+    return o1, o2, o3, o4, outfft, fft_result, unet_out
+
 
 def rotation_on_SCI(sc, rotation):
     # rotation to translation [-180:180] -> [-cfg.num_sector//2:cfg.num_sector//2]
@@ -548,6 +525,7 @@ def rotation_on_SCI(sc, rotation):
         # plt.show()
     return sc
 
+
 def imshow(tensor, title=None):
     unloader = transforms.ToPILImage()
     image = tensor.cpu().clone()  # we clone the tensor to not do changes on it
@@ -555,6 +533,7 @@ def imshow(tensor, title=None):
     image = unloader(image)
     plt.imshow(image, cmap='jet')
     plt.show()
+
 
 def rotation_matrix(axis, theta):
 

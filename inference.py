@@ -22,7 +22,7 @@ from loading_pointclouds import *
 import models.DiSCO as SC
 from tensorboardX import SummaryWriter
 import loss.loss_function
-import gpuadder
+import gputransform
 import config as cfg
 import scipy.io as scio
 
@@ -37,7 +37,7 @@ def infer(input_filename):
     elif cfg.INPUT_TYPE == 'image':
         query = np.load(input_filename)
     
-    model = SC.SCNet(global_feat=True, feature_transform=True, max_pool=False,
+    model = SC.DiSCO(global_feat=True, feature_transform=True, max_pool=False,
                                         output_dim=cfg.FEATURE_OUTPUT_DIM, num_points=cfg.NUM_POINTS)
     corr2soft = SC.Corr2Softmax(200., 0.)
 
@@ -57,11 +57,8 @@ def infer(input_filename):
     out, _, _, _ = infer_model(model, corr2soft, query)
     out_show = out.reshape(1, 32, 32)
 
-    # imshow(out_show)
-    # print("output descriptor: ",out)
-    # np.save("./output_des.npy", out.cpu().numpy())
-
     return out
+
 
 def infer_model(model, corr2soft, query):
 
@@ -77,6 +74,7 @@ def infer_model(model, corr2soft, query):
 
     model.train()
     return out, outfft, fft_result, unet_out
+
 
 def imshow(tensor, title=None):
     unloader = transforms.ToPILImage()
@@ -95,7 +93,6 @@ def GT_sc_angle_convert(gt_yaw, size):
         gt_yaw += 360
     
     gt_angle = gt_yaw
-    # print("gt_",gt_angle)
     for batch_num in range(gt_angle.shape[0]):            
         if gt_angle[batch_num] <= -180.:
             gt_angle[batch_num] = gt_angle[batch_num] + 540.
@@ -106,6 +103,7 @@ def GT_sc_angle_convert(gt_yaw, size):
     gt_angle = np.ceil(gt_angle * float(cfg.num_sector) / 360.) - 1.
     return gt_angle
 
+
 def fftshift2d(x):
     for dim in range(1, len(x.size())):
         n_shift = x.size(dim)//2
@@ -114,12 +112,14 @@ def fftshift2d(x):
         x = roll_n(x, axis=dim, n=n_shift)
     return x  # last dim=2 (real&imag)
 
+
 def roll_n(X, axis, n):
     f_idx = tuple(slice(None, None, None) if i != axis else slice(0, n, None) for i in range(X.dim()))
     b_idx = tuple(slice(None, None, None) if i != axis else slice(n, None, None) for i in range(X.dim()))
     front = X[f_idx]
     back = X[b_idx]
     return torch.cat([back, front], axis)
+
 
 def phase_corr(a, b, device, corr2soft):
     # a: template; b: source
@@ -156,6 +156,7 @@ def phase_corr(a, b, device, corr2soft):
 
     return angle, corr
 
+
 def rotation_on_SCI(sc, rotation):
     # rotation to translation [-180:180] -> [-cfg.num_sector//2:cfg.num_sector//2]
     if rotation > 0:
@@ -189,6 +190,7 @@ def rotation_on_SCI(sc, rotation):
         # plt.imshow(sc)
         # plt.show()
     return sc
+
 
 if __name__ == "__main__":
     # params

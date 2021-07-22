@@ -109,8 +109,8 @@ except AttributeError:
     numpy_include = numpy.get_numpy_include()
 
 
-ext = Extension('gpuadder',
-        sources = ['src/manager.cu', 'wrapper.pyx'],
+ext = Extension('gputransform',
+        sources = ['src/manager.cu', 'gputransform.pyx'],
         library_dirs = [CUDA['lib64']],
         libraries = ['cudart'],
         language = 'c++',
@@ -131,9 +131,9 @@ ext = Extension('gpuadder',
 
 
 
-setup(name = 'gpuadder',
+setup(name = 'gputransform',
       # Random metadata. there's more you can supply
-      author = 'Robert McGibbon',
+      author = 'XU Peter',
       version = '0.1',
 
       ext_modules = [ext],

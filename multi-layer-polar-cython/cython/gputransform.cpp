@@ -616,8 +616,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__gpuadder
-#define __PYX_HAVE_API__gpuadder
+#define __PYX_HAVE__gputransform
+#define __PYX_HAVE_API__gputransform
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -855,7 +855,7 @@ static const char *__pyx_filename;
 
 static const char *__pyx_f[] = {
   "stringsource",
-  "wrapper.pyx",
+  "gputransform.pyx",
   "__init__.pxd",
   "type.pxd",
 };
@@ -1110,7 +1110,7 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_8gpuadder_GPUTransformer;
+struct __pyx_obj_12gputransform_GPUTransformer;
 
 /* "../../../../../miniconda3/envs/rostorch/lib/python3.7/site-packages/Cython/Includes/numpy/__init__.pxd":814
  * ctypedef npy_longdouble longdouble_t
@@ -1148,14 +1148,14 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "wrapper.pyx":13
+/* "gputransform.pyx":13
  *         void retreive(float *point_trans)
  * 
  * cdef class GPUTransformer:             # <<<<<<<<<<<<<<
  *     cdef C_GPUTransformer* g
  *     cdef int size
  */
-struct __pyx_obj_8gpuadder_GPUTransformer {
+struct __pyx_obj_12gputransform_GPUTransformer {
   PyObject_HEAD
   GPUTransformer *g;
   int size;
@@ -1713,15 +1713,15 @@ static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
 
-/* Module declarations from 'gpuadder' */
-static PyTypeObject *__pyx_ptype_8gpuadder_GPUTransformer = 0;
+/* Module declarations from 'gputransform' */
+static PyTypeObject *__pyx_ptype_12gputransform_GPUTransformer = 0;
 static __Pyx_TypeInfo __Pyx_TypeInfo_float = { "float", NULL, sizeof(float), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
-#define __Pyx_MODULE_NAME "gpuadder"
-extern int __pyx_module_is_main_gpuadder;
-int __pyx_module_is_main_gpuadder = 0;
+#define __Pyx_MODULE_NAME "gputransform"
+extern int __pyx_module_is_main_gputransform;
+int __pyx_module_is_main_gputransform = 0;
 
-/* Implementation of 'gpuadder' */
+/* Implementation of 'gputransform' */
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
@@ -1747,6 +1747,7 @@ static const char __pyx_k_setstate[] = "__setstate__";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_ValueError[] = "ValueError";
+static const char __pyx_k_max_height[] = "max_height";
 static const char __pyx_k_max_length[] = "max_length";
 static const char __pyx_k_num_height[] = "num_height";
 static const char __pyx_k_num_sector[] = "num_sector";
@@ -1782,6 +1783,7 @@ static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_int32;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_max_height;
 static PyObject *__pyx_n_s_max_length;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
@@ -1805,14 +1807,14 @@ static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
 static PyObject *__pyx_n_s_zeros;
-static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_num_ring, int __pyx_v_num_sector, int __pyx_v_num_height, int __pyx_v_enough_large); /* proto */
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_2transform(struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_12gputransform_14GPUTransformer___cinit__(struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_max_height, int __pyx_v_num_ring, int __pyx_v_num_sector, int __pyx_v_num_height, int __pyx_v_enough_large); /* proto */
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_2transform(struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_4retreive(struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
-static PyObject *__pyx_tp_new_8gpuadder_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_12gputransform_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
 static PyObject *__pyx_tuple__3;
@@ -1824,20 +1826,21 @@ static PyObject *__pyx_tuple__8;
 static PyObject *__pyx_tuple__9;
 /* Late includes */
 
-/* "wrapper.pyx":18
+/* "gputransform.pyx":18
  *     cdef int grid_size
  * 
  *     def __cinit__(self, np.ndarray[float, ndim=1, mode = "c"] point not None,             # <<<<<<<<<<<<<<
- *                     int size, int max_length, int num_ring, int num_sector, int num_height, int enough_large):
+ *                     int size, int max_length, int max_height, int num_ring, int num_sector, int num_height, int enough_large):
  * 
  */
 
 /* Python wrapper */
-static int __pyx_pw_8gpuadder_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_8gpuadder_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_12gputransform_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_12gputransform_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_point = 0;
   int __pyx_v_size;
   int __pyx_v_max_length;
+  int __pyx_v_max_height;
   int __pyx_v_num_ring;
   int __pyx_v_num_sector;
   int __pyx_v_num_height;
@@ -1849,12 +1852,14 @@ static int __pyx_pw_8gpuadder_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_point,&__pyx_n_s_size,&__pyx_n_s_max_length,&__pyx_n_s_num_ring,&__pyx_n_s_num_sector,&__pyx_n_s_num_height,&__pyx_n_s_enough_large,0};
-    PyObject* values[7] = {0,0,0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_point,&__pyx_n_s_size,&__pyx_n_s_max_length,&__pyx_n_s_max_height,&__pyx_n_s_num_ring,&__pyx_n_s_num_sector,&__pyx_n_s_num_height,&__pyx_n_s_enough_large,0};
+    PyObject* values[8] = {0,0,0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+        CYTHON_FALLTHROUGH;
         case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
         CYTHON_FALLTHROUGH;
         case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
@@ -1881,43 +1886,49 @@ static int __pyx_pw_8gpuadder_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_size)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 7, 7, 1); __PYX_ERR(1, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 1); __PYX_ERR(1, 18, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_length)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 7, 7, 2); __PYX_ERR(1, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 2); __PYX_ERR(1, 18, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_ring)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_height)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 7, 7, 3); __PYX_ERR(1, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 3); __PYX_ERR(1, 18, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_sector)) != 0)) kw_args--;
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_ring)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 7, 7, 4); __PYX_ERR(1, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 4); __PYX_ERR(1, 18, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_height)) != 0)) kw_args--;
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_sector)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 7, 7, 5); __PYX_ERR(1, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 5); __PYX_ERR(1, 18, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_enough_large)) != 0)) kw_args--;
+        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_height)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 7, 7, 6); __PYX_ERR(1, 18, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 6); __PYX_ERR(1, 18, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  7:
+        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_enough_large)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, 7); __PYX_ERR(1, 18, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 18, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 7) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 8) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -1927,25 +1938,27 @@ static int __pyx_pw_8gpuadder_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
       values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
       values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
     }
     __pyx_v_point = ((PyArrayObject *)values[0]);
     __pyx_v_size = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
     __pyx_v_max_length = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_max_length == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
-    __pyx_v_num_ring = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_num_ring == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
-    __pyx_v_num_sector = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_num_sector == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
-    __pyx_v_num_height = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_num_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
-    __pyx_v_enough_large = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_enough_large == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
+    __pyx_v_max_height = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_max_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
+    __pyx_v_num_ring = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_num_ring == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
+    __pyx_v_num_sector = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_num_sector == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
+    __pyx_v_num_height = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_num_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
+    __pyx_v_enough_large = __Pyx_PyInt_As_int(values[7]); if (unlikely((__pyx_v_enough_large == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 19, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 18, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 18, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("gpuadder.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gputransform.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_point), __pyx_ptype_5numpy_ndarray, 0, "point", 0))) __PYX_ERR(1, 18, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8gpuadder_14GPUTransformer___cinit__(((struct __pyx_obj_8gpuadder_GPUTransformer *)__pyx_v_self), __pyx_v_point, __pyx_v_size, __pyx_v_max_length, __pyx_v_num_ring, __pyx_v_num_sector, __pyx_v_num_height, __pyx_v_enough_large);
+  __pyx_r = __pyx_pf_12gputransform_14GPUTransformer___cinit__(((struct __pyx_obj_12gputransform_GPUTransformer *)__pyx_v_self), __pyx_v_point, __pyx_v_size, __pyx_v_max_length, __pyx_v_max_height, __pyx_v_num_ring, __pyx_v_num_sector, __pyx_v_num_height, __pyx_v_enough_large);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1956,7 +1969,7 @@ static int __pyx_pw_8gpuadder_14GPUTransformer_1__cinit__(PyObject *__pyx_v_self
   return __pyx_r;
 }
 
-static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_num_ring, int __pyx_v_num_sector, int __pyx_v_num_height, int __pyx_v_enough_large) {
+static int __pyx_pf_12gputransform_14GPUTransformer___cinit__(struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self, PyArrayObject *__pyx_v_point, int __pyx_v_size, int __pyx_v_max_length, int __pyx_v_max_height, int __pyx_v_num_ring, int __pyx_v_num_sector, int __pyx_v_num_height, int __pyx_v_enough_large) {
   PyArrayObject *__pyx_v_sector = 0;
   PyArrayObject *__pyx_v_ring = 0;
   PyArrayObject *__pyx_v_height = 0;
@@ -2009,8 +2022,8 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
   }
   __pyx_pybuffernd_point.diminfo[0].strides = __pyx_pybuffernd_point.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_point.diminfo[0].shape = __pyx_pybuffernd_point.rcbuffer->pybuffer.shape[0];
 
-  /* "wrapper.pyx":21
- *                     int size, int max_length, int num_ring, int num_sector, int num_height, int enough_large):
+  /* "gputransform.pyx":21
+ *                     int size, int max_length, int max_height, int num_ring, int num_sector, int num_height, int enough_large):
  * 
  *         self.size = size             # <<<<<<<<<<<<<<
  *         self.grid_size = num_ring * num_sector * num_height * enough_large
@@ -2018,7 +2031,7 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
  */
   __pyx_v_self->size = __pyx_v_size;
 
-  /* "wrapper.pyx":22
+  /* "gputransform.pyx":22
  * 
  *         self.size = size
  *         self.grid_size = num_ring * num_sector * num_height * enough_large             # <<<<<<<<<<<<<<
@@ -2027,7 +2040,7 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
  */
   __pyx_v_self->grid_size = (((__pyx_v_num_ring * __pyx_v_num_sector) * __pyx_v_num_height) * __pyx_v_enough_large);
 
-  /* "wrapper.pyx":23
+  /* "gputransform.pyx":23
  *         self.size = size
  *         self.grid_size = num_ring * num_sector * num_height * enough_large
  *         cdef np.ndarray[int, ndim=1, mode = "c"] sector = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
@@ -2074,7 +2087,7 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
   __pyx_v_sector = ((PyArrayObject *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "wrapper.pyx":24
+  /* "gputransform.pyx":24
  *         self.grid_size = num_ring * num_sector * num_height * enough_large
  *         cdef np.ndarray[int, ndim=1, mode = "c"] sector = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] ring = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
@@ -2121,12 +2134,12 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
   __pyx_v_ring = ((PyArrayObject *)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "wrapper.pyx":25
+  /* "gputransform.pyx":25
  *         cdef np.ndarray[int, ndim=1, mode = "c"] sector = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] ring = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] height = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
  * 
- *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, num_ring, num_sector, num_height, enough_large)
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, max_height, num_ring, num_sector, num_height, enough_large)
  */
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -2168,10 +2181,10 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
   __pyx_v_height = ((PyArrayObject *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "wrapper.pyx":27
+  /* "gputransform.pyx":27
  *         cdef np.ndarray[int, ndim=1, mode = "c"] height = np.zeros(self.size, dtype=np.int32)
  * 
- *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, num_ring, num_sector, num_height, enough_large)             # <<<<<<<<<<<<<<
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, max_height, num_ring, num_sector, num_height, enough_large)             # <<<<<<<<<<<<<<
  * 
  *     def transform(self):
  */
@@ -2215,13 +2228,13 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
     __Pyx_RaiseBufferIndexError(__pyx_t_10);
     __PYX_ERR(1, 27, __pyx_L1_error)
   }
-  __pyx_v_self->g = new GPUTransformer((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_point.diminfo[0].strides))), __pyx_v_self->size, (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_ring.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_ring.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_sector.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_sector.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_height.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_height.diminfo[0].strides))), __pyx_v_max_length, __pyx_v_num_ring, __pyx_v_num_sector, __pyx_v_num_height, __pyx_v_enough_large);
+  __pyx_v_self->g = new GPUTransformer((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_point.diminfo[0].strides))), __pyx_v_self->size, (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_ring.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_ring.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_sector.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_sector.diminfo[0].strides))), (&(*__Pyx_BufPtrCContig1d(int *, __pyx_pybuffernd_height.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_height.diminfo[0].strides))), __pyx_v_max_length, __pyx_v_max_height, __pyx_v_num_ring, __pyx_v_num_sector, __pyx_v_num_height, __pyx_v_enough_large);
 
-  /* "wrapper.pyx":18
+  /* "gputransform.pyx":18
  *     cdef int grid_size
  * 
  *     def __cinit__(self, np.ndarray[float, ndim=1, mode = "c"] point not None,             # <<<<<<<<<<<<<<
- *                     int size, int max_length, int num_ring, int num_sector, int num_height, int enough_large):
+ *                     int size, int max_length, int max_height, int num_ring, int num_sector, int num_height, int enough_large):
  * 
  */
 
@@ -2243,7 +2256,7 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ring.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_sector.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("gpuadder.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gputransform.GPUTransformer.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2259,8 +2272,8 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
   return __pyx_r;
 }
 
-/* "wrapper.pyx":29
- *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, num_ring, num_sector, num_height, enough_large)
+/* "gputransform.pyx":29
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, max_height, num_ring, num_sector, num_height, enough_large)
  * 
  *     def transform(self):             # <<<<<<<<<<<<<<
  *         self.g.transform()
@@ -2268,24 +2281,24 @@ static int __pyx_pf_8gpuadder_14GPUTransformer___cinit__(struct __pyx_obj_8gpuad
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_3transform(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_3transform(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_3transform(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_3transform(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("transform (wrapper)", 0);
-  __pyx_r = __pyx_pf_8gpuadder_14GPUTransformer_2transform(((struct __pyx_obj_8gpuadder_GPUTransformer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_12gputransform_14GPUTransformer_2transform(((struct __pyx_obj_12gputransform_GPUTransformer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_2transform(struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self) {
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_2transform(struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("transform", 0);
 
-  /* "wrapper.pyx":30
+  /* "gputransform.pyx":30
  * 
  *     def transform(self):
  *         self.g.transform()             # <<<<<<<<<<<<<<
@@ -2294,8 +2307,8 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_2transform(struct __pyx_obj
  */
   __pyx_v_self->g->transform();
 
-  /* "wrapper.pyx":29
- *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, num_ring, num_sector, num_height, enough_large)
+  /* "gputransform.pyx":29
+ *         self.g = new C_GPUTransformer(&point[0], self.size, &ring[0], &sector[0], &height[0], max_length, max_height, num_ring, num_sector, num_height, enough_large)
  * 
  *     def transform(self):             # <<<<<<<<<<<<<<
  *         self.g.transform()
@@ -2309,7 +2322,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_2transform(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "wrapper.pyx":32
+/* "gputransform.pyx":32
  *         self.g.transform()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
@@ -2318,19 +2331,19 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_2transform(struct __pyx_obj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_5retreive(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_5retreive(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_5retreive(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_5retreive(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("retreive (wrapper)", 0);
-  __pyx_r = __pyx_pf_8gpuadder_14GPUTransformer_4retreive(((struct __pyx_obj_8gpuadder_GPUTransformer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_12gputransform_14GPUTransformer_4retreive(((struct __pyx_obj_12gputransform_GPUTransformer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self) {
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_4retreive(struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self) {
   CYTHON_UNUSED PyArrayObject *__pyx_v_grid_out = 0;
   CYTHON_UNUSED PyArrayObject *__pyx_v_mask_out = 0;
   PyArrayObject *__pyx_v_point_out = 0;
@@ -2369,7 +2382,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
   __pyx_pybuffernd_point_out.data = NULL;
   __pyx_pybuffernd_point_out.rcbuffer = &__pyx_pybuffer_point_out;
 
-  /* "wrapper.pyx":33
+  /* "gputransform.pyx":33
  * 
  *     def retreive(self):
  *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
@@ -2416,7 +2429,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
   __pyx_v_grid_out = ((PyArrayObject *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "wrapper.pyx":34
+  /* "gputransform.pyx":34
  *     def retreive(self):
  *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)             # <<<<<<<<<<<<<<
@@ -2463,7 +2476,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
   __pyx_v_mask_out = ((PyArrayObject *)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "wrapper.pyx":35
+  /* "gputransform.pyx":35
  *         cdef np.ndarray[int, ndim=1, mode = "c"] grid_out = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[int, ndim=1, mode = "c"] mask_out = np.zeros(self.size, dtype=np.int32)
  *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size * 3, dtype=np.float32)             # <<<<<<<<<<<<<<
@@ -2510,7 +2523,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
   __pyx_v_point_out = ((PyArrayObject *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "wrapper.pyx":37
+  /* "gputransform.pyx":37
  *         cdef np.ndarray[float, ndim=1, mode = "c"] point_out = np.zeros(self.grid_size * 3, dtype=np.float32)
  * 
  *         self.g.retreive(&point_out[0])             # <<<<<<<<<<<<<<
@@ -2529,7 +2542,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
   }
   __pyx_v_self->g->retreive((&(*__Pyx_BufPtrCContig1d(float *, __pyx_pybuffernd_point_out.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_point_out.diminfo[0].strides))));
 
-  /* "wrapper.pyx":39
+  /* "gputransform.pyx":39
  *         self.g.retreive(&point_out[0])
  * 
  *         return point_out             # <<<<<<<<<<<<<<
@@ -2539,7 +2552,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
   __pyx_r = ((PyObject *)__pyx_v_point_out);
   goto __pyx_L0;
 
-  /* "wrapper.pyx":32
+  /* "gputransform.pyx":32
  *         self.g.transform()
  * 
  *     def retreive(self):             # <<<<<<<<<<<<<<
@@ -2562,7 +2575,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_mask_out.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_point_out.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("gpuadder.GPUTransformer.retreive", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gputransform.GPUTransformer.retreive", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2585,19 +2598,19 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_4retreive(struct __pyx_obj_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8gpuadder_14GPUTransformer_6__reduce_cython__(((struct __pyx_obj_8gpuadder_GPUTransformer *)__pyx_v_self));
+  __pyx_r = __pyx_pf_12gputransform_14GPUTransformer_6__reduce_cython__(((struct __pyx_obj_12gputransform_GPUTransformer *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self) {
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2627,7 +2640,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_6__reduce_cython__(CYTHON_U
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gpuadder.GPUTransformer.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gputransform.GPUTransformer.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -2642,19 +2655,19 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_6__reduce_cython__(CYTHON_U
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_8gpuadder_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_12gputransform_14GPUTransformer_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8gpuadder_14GPUTransformer_8__setstate_cython__(((struct __pyx_obj_8gpuadder_GPUTransformer *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_12gputransform_14GPUTransformer_8__setstate_cython__(((struct __pyx_obj_12gputransform_GPUTransformer *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8gpuadder_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_12gputransform_14GPUTransformer_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_12gputransform_GPUTransformer *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2684,7 +2697,7 @@ static PyObject *__pyx_pf_8gpuadder_14GPUTransformer_8__setstate_cython__(CYTHON
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("gpuadder.GPUTransformer.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("gputransform.GPUTransformer.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -5139,7 +5152,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_8gpuadder_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k) {
+static PyObject *__pyx_tp_new_12gputransform_GPUTransformer(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -5147,14 +5160,14 @@ static PyObject *__pyx_tp_new_8gpuadder_GPUTransformer(PyTypeObject *t, PyObject
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  if (unlikely(__pyx_pw_8gpuadder_14GPUTransformer_1__cinit__(o, a, k) < 0)) goto bad;
+  if (unlikely(__pyx_pw_12gputransform_14GPUTransformer_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
   bad:
   Py_DECREF(o); o = 0;
   return NULL;
 }
 
-static void __pyx_tp_dealloc_8gpuadder_GPUTransformer(PyObject *o) {
+static void __pyx_tp_dealloc_12gputransform_GPUTransformer(PyObject *o) {
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -5163,20 +5176,20 @@ static void __pyx_tp_dealloc_8gpuadder_GPUTransformer(PyObject *o) {
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static PyMethodDef __pyx_methods_8gpuadder_GPUTransformer[] = {
-  {"transform", (PyCFunction)__pyx_pw_8gpuadder_14GPUTransformer_3transform, METH_NOARGS, 0},
-  {"retreive", (PyCFunction)__pyx_pw_8gpuadder_14GPUTransformer_5retreive, METH_NOARGS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_8gpuadder_14GPUTransformer_7__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_8gpuadder_14GPUTransformer_9__setstate_cython__, METH_O, 0},
+static PyMethodDef __pyx_methods_12gputransform_GPUTransformer[] = {
+  {"transform", (PyCFunction)__pyx_pw_12gputransform_14GPUTransformer_3transform, METH_NOARGS, 0},
+  {"retreive", (PyCFunction)__pyx_pw_12gputransform_14GPUTransformer_5retreive, METH_NOARGS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_12gputransform_14GPUTransformer_7__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_12gputransform_14GPUTransformer_9__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_8gpuadder_GPUTransformer = {
+static PyTypeObject __pyx_type_12gputransform_GPUTransformer = {
   PyVarObject_HEAD_INIT(0, 0)
-  "gpuadder.GPUTransformer", /*tp_name*/
-  sizeof(struct __pyx_obj_8gpuadder_GPUTransformer), /*tp_basicsize*/
+  "gputransform.GPUTransformer", /*tp_name*/
+  sizeof(struct __pyx_obj_12gputransform_GPUTransformer), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_8gpuadder_GPUTransformer, /*tp_dealloc*/
+  __pyx_tp_dealloc_12gputransform_GPUTransformer, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -5209,7 +5222,7 @@ static PyTypeObject __pyx_type_8gpuadder_GPUTransformer = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_8gpuadder_GPUTransformer, /*tp_methods*/
+  __pyx_methods_12gputransform_GPUTransformer, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -5219,7 +5232,7 @@ static PyTypeObject __pyx_type_8gpuadder_GPUTransformer = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_8gpuadder_GPUTransformer, /*tp_new*/
+  __pyx_tp_new_12gputransform_GPUTransformer, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -5247,17 +5260,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_gpuadder(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_gputransform(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_gpuadder},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_gputransform},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "gpuadder",
+    "gputransform",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -5302,6 +5315,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_int32, __pyx_k_int32, sizeof(__pyx_k_int32), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_max_height, __pyx_k_max_height, sizeof(__pyx_k_max_height), 0, 0, 1, 1},
   {&__pyx_n_s_max_length, __pyx_k_max_length, sizeof(__pyx_k_max_length), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_kp_u_ndarray_is_not_C_contiguous, __pyx_k_ndarray_is_not_C_contiguous, sizeof(__pyx_k_ndarray_is_not_C_contiguous), 0, 1, 0, 0},
@@ -5490,16 +5504,16 @@ static int __Pyx_modinit_type_init_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_8gpuadder_GPUTransformer) < 0) __PYX_ERR(1, 13, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_12gputransform_GPUTransformer) < 0) __PYX_ERR(1, 13, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_8gpuadder_GPUTransformer.tp_print = 0;
+  __pyx_type_12gputransform_GPUTransformer.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8gpuadder_GPUTransformer.tp_dictoffset && __pyx_type_8gpuadder_GPUTransformer.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_8gpuadder_GPUTransformer.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_12gputransform_GPUTransformer.tp_dictoffset && __pyx_type_12gputransform_GPUTransformer.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_12gputransform_GPUTransformer.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUTransformer, (PyObject *)&__pyx_type_8gpuadder_GPUTransformer) < 0) __PYX_ERR(1, 13, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8gpuadder_GPUTransformer) < 0) __PYX_ERR(1, 13, __pyx_L1_error)
-  __pyx_ptype_8gpuadder_GPUTransformer = &__pyx_type_8gpuadder_GPUTransformer;
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GPUTransformer, (PyObject *)&__pyx_type_12gputransform_GPUTransformer) < 0) __PYX_ERR(1, 13, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_12gputransform_GPUTransformer) < 0) __PYX_ERR(1, 13, __pyx_L1_error)
+  __pyx_ptype_12gputransform_GPUTransformer = &__pyx_type_12gputransform_GPUTransformer;
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5582,11 +5596,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initgpuadder(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initgpuadder(void)
+__Pyx_PyMODINIT_FUNC initgputransform(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initgputransform(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_gpuadder(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_gpuadder(void)
+__Pyx_PyMODINIT_FUNC PyInit_gputransform(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_gputransform(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -5653,7 +5667,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_gpuadder(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_gputransform(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -5665,7 +5679,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_gpuadder(PyObject *__pyx_pyinit_mo
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'gpuadder' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'gputransform' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -5680,7 +5694,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_gpuadder(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_gputransform(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -5719,7 +5733,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("gpuadder", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("gputransform", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -5737,14 +5751,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_gpuadder) {
+  if (__pyx_module_is_main_gputransform) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(1, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "gpuadder")) {
-      if (unlikely(PyDict_SetItemString(modules, "gpuadder", __pyx_m) < 0)) __PYX_ERR(1, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "gputransform")) {
+      if (unlikely(PyDict_SetItemString(modules, "gputransform", __pyx_m) < 0)) __PYX_ERR(1, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -5765,7 +5779,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   #endif
 
-  /* "wrapper.pyx":1
+  /* "gputransform.pyx":1
  * import numpy as np             # <<<<<<<<<<<<<<
  * import cython
  * cimport numpy as np
@@ -5775,7 +5789,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "wrapper.pyx":5
+  /* "gputransform.pyx":5
  * cimport numpy as np
  * 
  * assert sizeof(int) == sizeof(np.int32_t)             # <<<<<<<<<<<<<<
@@ -5791,7 +5805,7 @@ if (!__Pyx_RefNanny) {
   }
   #endif
 
-  /* "wrapper.pyx":1
+  /* "gputransform.pyx":1
  * import numpy as np             # <<<<<<<<<<<<<<
  * import cython
  * cimport numpy as np
@@ -5816,11 +5830,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init gpuadder", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init gputransform", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init gpuadder");
+    PyErr_SetString(PyExc_ImportError, "init gputransform");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
