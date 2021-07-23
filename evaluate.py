@@ -161,14 +161,6 @@ def get_latent_vectors(model, dict_to_process):
         queries = np.array(queries, dtype=np.float32)
         heading = np.array(heading)
 
-        randomYaw = (np.random.rand(heading.shape[0]) - 0.5) * 90.
-        heading = heading / np.pi * 180.
-        heading += randomYaw
-
-        for b in range(queries.shape[0]):
-            for dims in range(queries.shape[1]):
-                queries[b,dims,...] = rotation_on_SCI(queries[b,dims,...], randomYaw[b])
-
         with torch.no_grad():
             feed_tensor = torch.from_numpy(queries).float()
             feed_tensor = feed_tensor.to(device)
