@@ -15,7 +15,7 @@ Video is available [here](https://youtu.be/SludumGuLYo).
 ## Pre-Requisites
 * PyTorch 1.4.0 (<= 1.6.0 fft module is modified after 1.6.0)
 * tensorboardX
-* Cython
+* Cython (for point cloud process [voxelization](https://github.com/ZJU-Robotics-Lab/Voxelization_API.git))
 
 If you want to integrate it into **ROS**. We have test it on **Kinetic and Melodic**
 
