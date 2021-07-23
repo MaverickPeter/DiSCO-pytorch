@@ -98,9 +98,8 @@ rosrun disco_ros infer_ros.py
 Take a look at train_DiSCO.py and evaluate.py for more parameters
 **We found that our model also works well in cpu, only takes 50-80ms an inference.**
 
-## Pretrained Model on NCLT dataset
+## Pretrained Model on NCLT dataset [Not available now]
 ```
-https://drive.google.com/file/d/1VU9OtA0Q9t0nht5GcDc_0qQ9bVEit2lP/view?usp=sharing
 ```
 
 ## Acknowledgements
