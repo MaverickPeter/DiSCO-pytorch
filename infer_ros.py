@@ -41,7 +41,7 @@ def infer_ros(input_cloud, model, corr2soft):
     query = np.array(query, dtype=np.float32)
 
     out, _, _, _ = infer_model(model, corr2soft, query)
-    out_show = out.reshape(1, 32, 32)
+    out_show = out.reshape(1, 32, 32) # size is related to the disco dimension
     return out
 
 
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     cfg.num_height = 20
     cfg.max_length = 1
 
-    cfg.LOG_DIR = './log/polar_density_both_40_120_20/'
+    cfg.LOG_DIR = './log/' # change it to absolute path
     cfg.MODEL_FILENAME = "model.ckpt"
     cfg.INPUT_TYPE = FLAGS.input_type
 
@@ -218,6 +218,7 @@ if __name__ == "__main__":
     model = model.to(device)
     resume_filename = cfg.LOG_DIR + cfg.MODEL_FILENAME
     print("Resuming From ", resume_filename)
+
     checkpoint = torch.load(resume_filename)
     saved_state_dict = checkpoint['state_dict']
     saved_corr2soft_dict = checkpoint['corr2soft']

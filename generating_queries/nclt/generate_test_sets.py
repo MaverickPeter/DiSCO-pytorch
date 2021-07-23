@@ -79,57 +79,28 @@ def construct_query_and_database_sets(base_path, runs_folder, folders, pointclou
     database_trees = []
     test_trees = []
 
+    ##### construct kdtree
     for folder in folders:
         print(folder)
-
-        # construct dataframe
         velo_file = []
         df_database = pd.DataFrame(columns=['file','northing','easting','yaw'])
         df_test = pd.DataFrame(columns=['file','northing','easting','yaw'])
-        df_velo = pd.DataFrame(columns=['file','northing','easting','yaw'])
 
-        # read groundtruth in each folder
-        gt_filename = "ground_truth/groundtruth_" + folder + '.csv'
+        gt_filename = "gt_occ_3m.csv"
         df_locations = pd.read_csv(os.path.join(
-            base_path,runs_folder,folder,gt_filename), header=0, names = ['timestamp','northing','easting', 'height','roll','pitch','yaw'],low_memory=False)
-        all_filenames = sorted(os.listdir(os.path.join(base_path,runs_folder,folder+pointcloud_fols)))
+            base_path,runs_folder,folder,gt_filename), header=0, names = ['file','northing','easting','yaw'], low_memory=False)
         
-        # get the file name
-        for names in all_filenames:
-            names = os.path.splitext(names)[0]
-            velo_file.append(names)
-
-        # convert data type
-        df_locations['timestamp'] = df_locations['timestamp'].astype(int)
-        df_velo['file'] = velo_file
-
-        # save all relative info into df_velo
-        for idx in range(len(df_velo)):
-            loc_idx = find_closest_timestamp(df_locations['timestamp'].values, int(df_velo['file'][idx]))
-            df_velo['yaw'][idx] = df_locations['yaw'][loc_idx]
-            df_velo['northing'][idx] = df_locations['northing'][loc_idx]
-            df_velo['easting'][idx] = df_locations['easting'][loc_idx]
+        gt_test_filename = "gt_occ_test_3m.csv"
+        df_test = pd.read_csv(os.path.join(
+            base_path,runs_folder,folder,gt_test_filename), header=0, names = ['file','northing','easting','yaw'],low_memory=False)
         
-        df_velo['file'] = runs_folder+folder + \
-            pointcloud_fols+df_velo['file'].astype(str)+'.bin'
+        for index, row in df_locations.iterrows():
+            df_database = df_database.append(row, ignore_index=True)
 
-        first_flag=False
+        for index, row in df_test.iterrows():
+            df_test = df_test.append(row, ignore_index=True)
+            df_database = df_database.append(row, ignore_index=True)
 
-        for index, row in df_velo.iterrows():
-            # entire business district is in the test set
-            if np.isnan(float(row['northing'])) or np.isnan(float(row['easting'])):
-                continue
-            elif not first_flag :
-                prev_northing, prev_easting = float(row['northing']), float(row['easting'])
-                first_flag = True
-            
-            if(check_submap(float(row['northing']), float(row['easting']), float(prev_northing), float(prev_easting))):
-                if(check_in_test_set(float(row['northing']), float(row['easting']), p)):
-                    df_test = df_test.append(row, ignore_index=True)
-                df_database = df_database.append(row, ignore_index=True)
-                prev_northing, prev_easting = float(row['northing']), float(row['easting'])
-
-        # construct KDTree for each folder
         database_tree = KDTree(df_database[['northing','easting']])
         test_tree = KDTree(df_test[['northing','easting']])
         database_trees.append(database_tree)
@@ -138,61 +109,35 @@ def construct_query_and_database_sets(base_path, runs_folder, folders, pointclou
     test_sets = []
     database_sets = []
 
-    # iter all folders for building datasets
+    ##### construct corresponding database
     for folder in folders:
-        
         database = {}
         test = {}
         velo_file = []
-
-        # read groundtruth in each folder
         df_velo = pd.DataFrame(columns=['file','northing','easting','yaw'])
-        gt_filename = "ground_truth/groundtruth_" + folder + '.csv'
+
+        gt_filename = "gt_occ_3m.csv"
         df_locations = pd.read_csv(os.path.join(
-            base_path,runs_folder,folder,gt_filename), header=0, names = ['timestamp','northing','easting', 'height','roll','pitch','yaw'], low_memory=False)
-        all_filenames = sorted(os.listdir(os.path.join(base_path,runs_folder,folder+pointcloud_fols)))
+            base_path,runs_folder,folder,gt_filename), header=0, names = ['file','northing','easting','yaw'],low_memory=False)
         
-        # get the file name
-        for names in all_filenames:
-            names = os.path.splitext(names)[0]
-            velo_file.append(names)
-        
-        # convert data type
-        df_locations['timestamp'] = df_locations['timestamp'].astype(int)
-        df_velo['file'] = velo_file
+        gt_test_filename = "gt_occ_test_3m.csv"
+        df_test = pd.read_csv(os.path.join(
+            base_path,runs_folder,folder,gt_test_filename), header=0, names = ['file','northing','easting','yaw'],low_memory=False)
 
-        for idx in range(len(df_velo)):
-            loc_idx = find_closest_timestamp(df_locations['timestamp'].values, int(df_velo['file'][idx]))
-            df_velo['yaw'][idx] = df_locations['yaw'][loc_idx]
-            df_velo['northing'][idx] = df_locations['northing'][loc_idx]
-            df_velo['easting'][idx] = df_locations['easting'][loc_idx]
-        
-        # change the file dir
-        df_velo['file'] = runs_folder+folder + \
-            pointcloud_fols+df_velo['file'].astype(str)+'.bin'
+        for index,row in df_locations.iterrows():
+            filename = row['file'].replace('.bin','.npy')
+            filename = filename.replace(pointcloud_fols,'/occ_3m/')
+            database[len(database.keys())] = {
+                'query':filename,'northing':row['northing'],'easting':row['easting'],'heading':row['yaw']}
 
-        first_flag = False
-        
-        # construct datasets
-        for index,row in df_velo.iterrows():
-            if np.isnan(float(row['northing'])) or np.isnan(float(row['easting'])):
-                continue
-            elif not first_flag :
-                prev_northing, prev_easting = float(row['northing']), float(row['easting'])
-                first_flag = True
-            
-            # add all info into database set
-            if(check_submap(float(row['northing']), float(row['easting']), float(prev_northing), float(prev_easting))):
-                filename = row['file'].replace('.bin','.npy')
-                filename = filename.replace(pointcloud_fols,'/velo_trans/')
-                if(check_in_test_set(float(row['northing']), float(row['easting']), p)):
-                    test[len(test.keys())] = {
-                        'query':filename,'northing':row['northing'],'easting':row['easting'],'heading':row['yaw']}
+        for index,row in df_test.iterrows():
+            filename = row['file'].replace('.bin','.npy')
+            filename = filename.replace(pointcloud_fols,'/occ_3m/')
+            test[len(test.keys())] = {
+                'query':filename,'northing':row['northing'],'easting':row['easting'],'heading':row['yaw']}
+            database[len(database.keys())] = {
+                'query':filename,'northing':row['northing'],'easting':row['easting'],'heading':row['yaw']}
 
-                database[len(database.keys())] = {
-                    'query':filename,'northing':row['northing'],'easting':row['easting'],'heading':row['yaw']}
-                prev_northing, prev_easting = float(row['northing']), float(row['easting'])
-        
         database_sets.append(database)
         test_sets.append(test)
     
@@ -239,5 +184,5 @@ for index in range(len(all_folders)):
 
 print("folders",folders)
 # construct query and database sets
-construct_query_and_database_sets(base_path, runs_folder, folders, "/velodyne_sync/",
+construct_query_and_database_sets(base_path, runs_folder, folders, "/velodyne_data/velodyne_sync/",
                                   "ground_truth.csv", p, "nclt")

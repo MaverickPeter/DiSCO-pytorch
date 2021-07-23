@@ -17,7 +17,6 @@ from torchvision import transforms, utils
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
-from utils import *
 from loading_pointclouds import *
 import models.DiSCO as SC
 from tensorboardX import SummaryWriter
@@ -31,14 +30,10 @@ cudnn.enabled = True
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def infer(input_filename):
-    if cfg.INPUT_TYPE == 'point':
-        query = load_pc_file_infer(input_filename)
-        query = np.array(query, dtype=np.float32)
-    elif cfg.INPUT_TYPE == 'image':
-        query = np.load(input_filename)
-    
-    model = SC.DiSCO(global_feat=True, feature_transform=True, max_pool=False,
-                                        output_dim=cfg.FEATURE_OUTPUT_DIM, num_points=cfg.NUM_POINTS)
+    query = load_pc_file_infer(input_filename)
+    query = np.array(query, dtype=np.float32)
+
+    model = SC.DiSCO(output_dim=cfg.FEATURE_OUTPUT_DIM)
     corr2soft = SC.Corr2Softmax(200., 0.)
 
     corr2soft = corr2soft.to(device)
@@ -57,11 +52,14 @@ def infer(input_filename):
     out, _, _, _ = infer_model(model, corr2soft, query)
     out_show = out.reshape(1, 32, 32)
 
+    imshow(out_show)
+    # print("output descriptor: ",out)
+    # np.save("./output_des.npy", out.cpu().numpy())
+
     return out
 
 
 def infer_model(model, corr2soft, query):
-
     model.eval()
     corr2soft.eval()
     is_training = False
@@ -93,6 +91,7 @@ def GT_sc_angle_convert(gt_yaw, size):
         gt_yaw += 360
     
     gt_angle = gt_yaw
+
     for batch_num in range(gt_angle.shape[0]):            
         if gt_angle[batch_num] <= -180.:
             gt_angle[batch_num] = gt_angle[batch_num] + 540.
@@ -187,8 +186,7 @@ def rotation_on_SCI(sc, rotation):
         N = np.float32([[1,0,t_x],[0,1,t_y]])
         sc = cv2.warpAffine(sc, N, (col, row))
         sc[:, (cfg.num_sector-t):cfg.num_sector] = patch
-        # plt.imshow(sc)
-        # plt.show()
+
     return sc
 
 
@@ -209,8 +207,9 @@ if __name__ == "__main__":
     cfg.num_height = 20
     cfg.max_length = 1
 
-    cfg.LOG_DIR = './log/polar_density_both_40_120_20/'
+    cfg.LOG_DIR = './log/'
     cfg.MODEL_FILENAME = "model.ckpt"
     cfg.INPUT_TYPE = FLAGS.input_type
 
     disco = infer(cfg.INPUT_FILENAME)
+

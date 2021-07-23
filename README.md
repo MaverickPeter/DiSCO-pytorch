@@ -19,32 +19,84 @@ Video is available [here](https://youtu.be/SludumGuLYo).
 
 If you want to integrate it into **ROS**. We have test it on **Kinetic and Melodic**
 
-## Train
+## How to use
+
+### prepare training data
+
+For NCLT dataset, if you want to use our code for convenience you have to form the data into this file structure. **(occ_xm is empty)**
+
 ```
-python train_DiSCO.py --dataset_folder $DATASET_FOLDER
+├── 2012-02-04
+│   ├── ground_truth
+│   ├── occ_0.5m
+│   └── velodyne_data
+│       └── velodyne_sync
+├── 2012-03-17
+│   ├── ground_truth
+│   ├── occ_3m
+│   └── velodyne_data
+│       └── velodyne_sync
+```
+
+In [generating_queries](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries)/[nclt](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries/nclt)/
+
+```
+python gt_generator.py # add yaw info
+python generate_training_tuples_baseline_with_pose.py
+python generate_test_sets.py
+```
+
+### Use point cloud process module in cuda (cython wrapped)
+
+In [multi-layer-polar-cython](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/multi-layer-polar-cython)/[cython](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/multi-layer-polar-cython/cython)
+
+```
+# To inplace install the cython wrapped module:
+python setup.py build_ext --inplace
+
+# or install in python/site_packages
+python setup.py install
+```
+
+and now you will have a gputransform.cpythonxxx.so file and copy it to **[generating_queries](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries)/[nclt](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries/nclt) and main dir** where you can find a place holder.
+
+## Train
+
+```
+python train_DiSCO.py (arguments please refer to the code in this python file)
 ```
 
 ## Evaluate
 ```
-python evaluate.py --dataset_folder $DATASET_FOLDER
-```
-
-## Utility
-
-```
-python evaluate.py --dataset_folder $DATASET_FOLDER
+python evaluate.py (arguments please refer to the code in this python file)
 ```
 
 ## Infer
 
 ```
+# simple inference
 python inference.py
+
+############################
 # infer in ros
-python infer_ros.py
+# create a workspace
+mkdir -p ~/disco_ws/src
+cd ~/disco_ws/src
+
+# clone the repo
+git clone https://github.com/MaverickPeter/DiSCO-pytorch.git
+cd ..
+
+# make
+catkin_make
+source devel/setup.bash
+
+# run
+rosrun disco_ros infer_ros.py
 ```
 
 Take a look at train_DiSCO.py and evaluate.py for more parameters
-**We found that our model works well in cpu, only takes 50-80ms one inference.**
+**We found that our model also works well in cpu, only takes 50-80ms an inference.**
 
 ## Pretrained Model on NCLT dataset
 ```

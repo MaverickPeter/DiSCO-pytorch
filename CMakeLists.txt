@@ -22,5 +22,3 @@ catkin_package(
   CATKIN_DEPENDS message_runtime   
 )
 
-#install(PROGRAMS detect
-#        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

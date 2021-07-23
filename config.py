@@ -31,8 +31,8 @@ BN_DECAY_CLIP = 0.99
 
 RESUME = False
 
-TRAIN_FILE = './generating_queries/nclt/training_queries_baseline.pickle'
-TEST_FILE = './generating_queries/nclt/test_queries_baseline.pickle'
+TRAIN_FILE = './generating_queries/nclt/training_queries_baseline_occ.pickle'
+TEST_FILE = './generating_queries/nclt/test_queries_baseline_occ.pickle'
 
 TRAIN_FOLDER = '/occ_0.5m/'
 TEST_FOLDER = '/occ_3m/'
@@ -61,8 +61,8 @@ EVAL_BATCH_SIZE = 1
 EVAL_POSITIVES_PER_QUERY = 2
 EVAL_NEGATIVES_PER_QUERY = 4
 
-EVAL_DATABASE_FILE = '/home/mav-lab/Projects/git_backup/DiSCO-test/generating_queries/nclt/nclt_evaluation_database.pickle'
-EVAL_QUERY_FILE = '/home/mav-lab/Projects/git_backup/DiSCO-test/generating_queries/nclt/nclt_evaluation_query.pickle'
+EVAL_DATABASE_FILE = './generating_queries/nclt/nclt_evaluation_database.pickle'
+EVAL_QUERY_FILE = './generating_queries/nclt/nclt_evaluation_query.pickle'
 
 
 def cfg_str():

@@ -76,7 +76,7 @@ def load_pc_file_infer(filename):
     pc_img = np.zeros([cfg.num_height * cfg.num_ring * cfg.num_sector])
     pc = pc.transpose().flatten().astype(np.float32)
 
-    transer = gputransform.GPUTransformer(pc, size, cfg.max_length, cfg.max_height, cfg.num_ring, cfg.num_sector, cfg.num_height, cfg.overlap_num)
+    transer = gputransform.GPUTransformer(pc, size, cfg.max_length, cfg.max_height, cfg.num_ring, cfg.num_sector, cfg.num_height, 1)
     transer.transform()
     point_t = transer.retreive()
     point_t = point_t.reshape(-1, 3)
@@ -104,7 +104,7 @@ def load_pc_infer(pc):
     pc_img = np.zeros([cfg.num_height * cfg.num_ring * cfg.num_sector])
     pc = pc.transpose().flatten().astype(np.float32)
 
-    transer = gputransform.GPUTransformer(pc, size, cfg.max_length, cfg.max_height, cfg.num_ring, cfg.num_sector, cfg.num_height, cfg.overlap_num)
+    transer = gputransform.GPUTransformer(pc, size, cfg.max_length, cfg.max_height, cfg.num_ring, cfg.num_sector, cfg.num_height, 1)
     transer.transform()
     point_t = transer.retreive()
     point_t = point_t.reshape(-1, 3)
@@ -116,7 +116,7 @@ def load_pc_infer(pc):
 
 def load_pc_file(filename):
     filename = filename.replace('.bin','.npy')
-    filename = filename.replace('/velodyne_sync/','/sc_density_0.5m/')
+    filename = filename.replace('/velo_trans/','/occ_0.5m/')
     pc_img = np.load(filename)
 
     return pc_img

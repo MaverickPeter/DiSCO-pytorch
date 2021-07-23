@@ -15,9 +15,7 @@ import gputransform
 
 BASE_DIR = "/media/mav-lab/1T/Data/Datasets/NCLT/NCLT/"
 base_path = "/media/mav-lab/1T/Data/Datasets/NCLT/NCLT/"
-
 runs_folder = "/media/mav-lab/1T/Data/Datasets/NCLT/NCLT/"
-
 pointcloud_fols = "/velodyne_data/velodyne_sync/"
 
 all_folders = sorted(os.listdir(os.path.join(base_path, runs_folder)))
@@ -30,7 +28,8 @@ index_list = range(len(all_folders)-1)
 print("Number of runs: " + str(len(index_list)))
 
 for index in index_list:
-    folders.append(all_folders[index])
+    if index == 0:
+        folders.append(all_folders[index])
 print(folders)
 
 p = [-50.0, 150.0, -250.0, 150.0]
@@ -246,6 +245,7 @@ for folder in folders:
 
 
     for index, row in df_velo.iterrows():
+        print(row['file'])
         print("index", index, ' / ', len(df_velo))
         # for not nan value and very first ones (which often wrong)
         if np.isnan(float(row['northing'])) or np.isnan(float(row['easting'])):
@@ -259,7 +259,9 @@ for folder in folders:
                 # process point cloud and save
                 velo = load_pc_file(row['file'])
                 save_name = row['file'].replace('.bin','.npy')
+                row['file'] = row['file'].replace('.bin','.npy')
                 save_name = save_name.replace(pointcloud_fols, cfg.TRAIN_FOLDER)
+                row['file'] = row['file'].replace(pointcloud_fols, cfg.TRAIN_FOLDER)
                 np.save(save_name, velo)
 
                 if(check_in_test_set(float(row['northing']), float(row['easting']), p)):
@@ -274,7 +276,9 @@ for folder in folders:
                 # process point cloud and save
                 velo = load_pc_file(row['file'])
                 save_name = row['file'].replace('.bin','.npy')
-                save_name = save_name.replace(pointcloud_fols, cfg.TEST_FOLDER)
+                row['file'] = row['file'].replace('.bin','.npy')
+                save_name = save_name.replace(pointcloud_fols, cfg.TRAIN_FOLDER)
+                row['file'] = row['file'].replace(pointcloud_fols, cfg.TRAIN_FOLDER)
                 np.save(save_name, velo)
                 
                 if(check_in_test_set(float(row['northing']), float(row['easting']), p)):
@@ -287,8 +291,8 @@ for folder in folders:
     if save_flag:
         print("Number of training submaps: "+str(len(df_train['file'])))
         print("Number of non-disjoint test submaps: "+str(len(df_test['file'])))
-        construct_query_dict(df_train, "./training_queries_baseline_" + cfg.EXPERIMENT_NAME + "_test.pickle", pickle_flag=save_flag)
-        construct_query_dict(df_test, "./test_queries_baseline_" + cfg.EXPERIMENT_NAME + "test.pickle", pickle_flag=save_flag)
+        construct_query_dict(df_train, "./training_queries_baseline_" + cfg.EXPERIMENT_NAME + ".pickle", pickle_flag=save_flag)
+        construct_query_dict(df_test, "./test_queries_baseline_" + cfg.EXPERIMENT_NAME + ".pickle", pickle_flag=save_flag)
 
         gt_train_filename = "gt_" + cfg.EXPERIMENT_NAME + "_0.5m.csv"
         df_train.to_csv(os.path.join(base_path,runs_folder,folder,gt_train_filename))
