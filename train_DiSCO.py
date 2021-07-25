@@ -41,14 +41,14 @@ parser.add_argument('--max_epoch', type=int, default=20,
                     help='Epoch to run [default: 20]')
 parser.add_argument('--batch_num_queries', type=int, default=2,
                     help='Batch Size during training [default: 2]')
-parser.add_argument('--learning_rate', type=float, default=0.000001,
-                    help='Initial learning rate [default: 0.000005]')
+parser.add_argument('--learning_rate', type=float, default=0.0001,
+                    help='Initial learning rate [default: 0.0001]')
 parser.add_argument('--momentum', type=float, default=0.9,
                     help='Initial learning rate [default: 0.9]')
 parser.add_argument('--optimizer', default='adam',
                     help='adam or momentum [default: adam]')
-parser.add_argument('--decay_step', type=int, default=200000,
-                    help='Decay step for lr decay [default: 200000]')
+parser.add_argument('--decay_step', type=int, default=100000,
+                    help='Decay step for lr decay [default: 100000]')
 parser.add_argument('--decay_rate', type=float, default=0.7,
                     help='Decay rate for lr decay [default: 0.7]')
 parser.add_argument('--margin_1', type=float, default=0.5,
