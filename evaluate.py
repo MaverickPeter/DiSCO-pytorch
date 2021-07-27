@@ -160,6 +160,7 @@ def get_latent_vectors(model, dict_to_process):
         queries = load_pc_files(file_names)
         queries = np.array(queries, dtype=np.float32)
         heading = np.array(heading)
+        heading = heading / np.pi * 180.
 
         with torch.no_grad():
             feed_tensor = torch.from_numpy(queries).float()
@@ -203,14 +204,7 @@ def get_latent_vectors(model, dict_to_process):
         queries = np.array(queries, dtype=np.float32)
         heading_edge = np.array(heading)
         heading_edge = heading_edge.reshape(-1,1)
-
-        randomYaw = (np.random.rand(heading_edge.shape[0],1) - 0.5) * 90.
         heading_edge = heading_edge / np.pi * 180.
-        heading_edge += randomYaw
-
-        for b in range(queries.shape[0]):
-            for dims in range(queries.shape[1]):
-                queries[b,dims,...] = rotation_on_SCI(queries[b,dims,...], randomYaw[b,0])
 
         with torch.no_grad():
             feed_tensor = torch.from_numpy(queries).float()
@@ -287,7 +281,8 @@ def get_recall(m, n, DATABASE_VECTORS, QUERY_VECTORS, QUERY_SETS, FFT_DATABASE_V
             if indices[0][j] in true_neighbors:
                 if(j == 0):
                     count += 1
-                    gt_angle = GT_sc_angle_convert(-gt_yaw_query[i] + gt_yaw_database[indices[0][j]], cfg.num_sector)
+                    
+                    gt_angle = GT_sc_angle_convert(gt_yaw_database[indices[0][j]] - gt_yaw_query[i], cfg.num_sector)
                     angle, _ = phase_corr(database_fft[indices[0][j]], query_fft[i], device, corr2soft)
                     angle = angle.detach().cpu().numpy()
                     
@@ -476,7 +471,7 @@ if __name__ == "__main__":
     cfg.DECAY_RATE = FLAGS.decay_rate
     cfg.RESULTS_FOLDER = FLAGS.results_dir
 
-    cfg.LOG_DIR = 'log/'
+    cfg.LOG_DIR = 'log/100celoss/'
     cfg.OUTPUT_FILE = cfg.RESULTS_FOLDER + 'results.txt'
     cfg.MODEL_FILENAME = "model.ckpt"
     cfg.DATASET_FOLDER = FLAGS.dataset_folder

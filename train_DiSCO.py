@@ -41,8 +41,8 @@ parser.add_argument('--max_epoch', type=int, default=20,
                     help='Epoch to run [default: 20]')
 parser.add_argument('--batch_num_queries', type=int, default=2,
                     help='Batch Size during training [default: 2]')
-parser.add_argument('--learning_rate', type=float, default=0.0001,
-                    help='Initial learning rate [default: 0.0001]')
+parser.add_argument('--learning_rate', type=float, default=0.00001,
+                    help='Initial learning rate [default: 0.00001]')
 parser.add_argument('--momentum', type=float, default=0.9,
                     help='Initial learning rate [default: 0.9]')
 parser.add_argument('--optimizer', default='adam',
@@ -57,7 +57,7 @@ parser.add_argument('--margin_2', type=float, default=0.2,
                     help='Margin for hinge loss [default: 0.2]')
 parser.add_argument('--loss_function', default='quadruplet', choices=[
                     'triplet', 'quadruplet'], help='triplet or quadruplet [default: quadruplet]')
-parser.add_argument('--loss_not_lazy', action='store_false',
+parser.add_argument('--loss_not_lazy', action='store_true',
                     help='If present, do not use lazy variant of loss')
 parser.add_argument('--loss_ignore_zero_batch', action='store_true',
                     help='If present, mean only batches with loss > 0.0')
@@ -314,6 +314,7 @@ def train_one_epoch(model, optimizer, corr2soft, optimizer_c2s, train_writer, lo
         for dim in range(queries.shape[2]):
             queries[0,0,dim,...] = rotation_on_SCI(queries[0,0,dim,...], randomYaw)
         
+        # rotate positives to original query so we only use random yaw to gernerate yaw diff
         for b in range(positives.shape[1]):
             for dims in range(positives.shape[2]):
                 positives[0,b,dims,...] = rotation_on_SCI(positives[0,b,dims,...], (heading[0]-heading[1+b])/np.pi*180)
@@ -336,11 +337,17 @@ def train_one_epoch(model, optimizer, corr2soft, optimizer_c2s, train_writer, lo
         # visualization
         train_writer.add_scalar("Loss", (loss - yaw_loss).cpu().item(), TOTAL_ITERATIONS)
         train_writer.add_scalar("Yaw_Loss", yaw_loss.cpu().item(), TOTAL_ITERATIONS)
-        train_writer.add_scalar("Yaw_Loss_L1", yaw_loss_l1.cpu().item(), TOTAL_ITERATIONS)
+        train_writer.add_scalar("Yaw_Loss_L1", yaw_loss_l1.item(), TOTAL_ITERATIONS)
 
         train_writer.add_image("query", outfft[0,0,...].unsqueeze(0).detach().cpu(), TOTAL_ITERATIONS)
         train_writer.add_image("positive", outfft[1,0,...].unsqueeze(0).detach().cpu(), TOTAL_ITERATIONS)
         train_writer.add_image("corr", corr[0,...].unsqueeze(0).detach().cpu(), TOTAL_ITERATIONS)
+
+        # if(yaw_loss_l1 > 10):
+        #     print(positives.shape)
+        #     train_writer.add_image("query image", torch.from_numpy(queries[0,0,...].sum(axis=0)).unsqueeze(0).float(), TOTAL_ITERATIONS)
+        #     train_writer.add_image("positive image1", torch.from_numpy(positives[0,0,...].sum(axis=0)).unsqueeze(0).float(), TOTAL_ITERATIONS)
+        #     train_writer.add_image("positive image2", torch.from_numpy(positives[0,1,...].sum(axis=0)).unsqueeze(0).float(), TOTAL_ITERATIONS)
 
         TOTAL_ITERATIONS += cfg.BATCH_NUM_QUERIES
 
