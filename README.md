@@ -41,7 +41,6 @@ For NCLT dataset, if you want to use our code for convenience you have to form t
 In [generating_queries](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries)/[nclt](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries/nclt)/
 
 ```
-python gt_generator.py # add yaw info
 python generate_training_tuples_baseline_with_pose.py
 python generate_test_sets.py
 ```
