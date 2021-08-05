@@ -37,7 +37,7 @@ TEST_FILE = './generating_queries/nclt/test_queries_baseline_occ.pickle'
 TRAIN_FOLDER = '/occ_0.5m/'
 TEST_FOLDER = '/occ_3m/'
 
-SUBMAP_INTERVAL_TRAIN = 1.5
+SUBMAP_INTERVAL_TRAIN = 0.5
 SUBMAP_INTERVAL_TEST = 3.0
 
 

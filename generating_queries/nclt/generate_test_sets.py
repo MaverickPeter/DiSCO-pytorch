@@ -9,7 +9,7 @@ import gputransform
 import config as cfg
 
 #####For training and test data split#####
-cfg.submap_interval = 1.5
+cfg.SAMPLE_INTERVAL_TEST = 1.5
 
 x_width = 150
 y_width = 150
@@ -49,7 +49,7 @@ def check_submap(northing, easting, prev_northing, prev_easting):
     is_submap = False
     euclidean = np.abs(np.sqrt((prev_northing-northing)**2 + (prev_easting-easting)**2))
     
-    if(euclidean < cfg.submap_interval and euclidean >= (cfg.submap_interval - 0.5)):
+    if(euclidean < cfg.SAMPLE_INTERVAL_TEST and euclidean >= (cfg.SAMPLE_INTERVAL_TEST - 0.5)):
         is_submap = True
     
     return is_submap

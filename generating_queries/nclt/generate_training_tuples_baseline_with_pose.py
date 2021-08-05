@@ -55,7 +55,7 @@ def check_submap_test(northing, easting, prev_northing, prev_easting):
 def check_submap_train(northing, easting, prev_northing, prev_easting):
     is_submap = False
     euclidean = np.abs(np.sqrt((prev_northing-northing)**2 + (prev_easting-easting)**2))
-    if(euclidean < cfg.SUBMAP_INTERVAL_TRAIN + 0.5 and euclidean >= cfg.SUBMAP_INTERVAL_TRAIN):
+    if(euclidean < cfg.SUBMAP_INTERVAL_TRAIN + 1.0 and euclidean >= cfg.SUBMAP_INTERVAL_TRAIN):
         is_submap = True
     return is_submap
 
@@ -277,8 +277,8 @@ for folder in folders:
                 velo = load_pc_file(row['file'])
                 save_name = row['file'].replace('.bin','.npy')
                 row['file'] = row['file'].replace('.bin','.npy')
-                save_name = save_name.replace(pointcloud_fols, cfg.TRAIN_FOLDER)
-                row['file'] = row['file'].replace(pointcloud_fols, cfg.TRAIN_FOLDER)
+                save_name = save_name.replace(pointcloud_fols, cfg.TEST_FOLDER)
+                row['file'] = row['file'].replace(pointcloud_fols, cfg.TEST_FOLDER)
                 np.save(save_name, velo)
                 
                 if(check_in_test_set(float(row['northing']), float(row['easting']), p)):
