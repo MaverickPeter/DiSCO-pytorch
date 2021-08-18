@@ -4,7 +4,6 @@ import numpy.testing as npt
 import time
 import os
 import numpy.testing as npt
-from utils import point2gridmap
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 

@@ -57,7 +57,7 @@ python setup.py build_ext --inplace
 python setup.py install
 ```
 
-and now you will have a gputransform.cpythonxxx.so file and copy it to **[generating_queries](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries)/[nclt](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries/nclt) and main dir** where you can find a place holder.
+and now you will have a gputransform.cpythonxxx.so file and copy it to **[generating_queries](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries)/[nclt](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries/nclt) and main dir** where you can find a place holder. Note that the input of the wrapped point cloud process module you should scale the original point cloud to **[-1~1]** range for all axis. No extra process for point cloud such as downscale the points number.
 
 ## Train
 

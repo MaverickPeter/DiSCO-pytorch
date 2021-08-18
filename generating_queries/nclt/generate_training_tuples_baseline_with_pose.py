@@ -104,13 +104,17 @@ def load_lidar_file_nclt(file_path):
 
         x, y, z = convert(x, y, z)
         s = "%5.3f, %5.3f, %5.3f, %d, %d" % (x, y, z, i, l)
-        hits += [[x, y, z]]
+
+        # filter and normalize the point cloud to -1 ~ 1
+        if np.abs(x) < 70. and z > -20. and z < -2. and np.abs(y) < 70. and not(np.abs(x) < 5. and np.abs(y) < 5.):
+            hits += [[x/70., y/70., z/20.]]
 
     f_bin.close()
     hits = np.asarray(hits)
     hits[:, 2] = -hits[:, 2]
 
     return hits
+
 
 
 # load pointcloud and process it using CUDA accelerate 
