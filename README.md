@@ -55,6 +55,11 @@ python setup.py build_ext --inplace
 
 # or install in python/site_packages
 python setup.py install
+
+# to test
+python test.py
+
+(If you meet segmentation fault error, you may have overlarge number of points to process e.g. 67w. To tackle this problem you may need to change your system stack size by 'ulimit -s 81920' in your bash)
 ```
 
 and now you will have a gputransform.cpythonxxx.so file and copy it to **[generating_queries](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries)/[nclt](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries/nclt) and main dir** where you can find a place holder. Note that the input of the wrapped point cloud process module you should scale the original point cloud to **[-1~1]** range for all axis. No extra process for point cloud such as downscale the points number.
