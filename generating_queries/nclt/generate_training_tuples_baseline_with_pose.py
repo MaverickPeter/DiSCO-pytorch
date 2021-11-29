@@ -28,8 +28,8 @@ index_list = range(len(all_folders)-1)
 print("Number of runs: " + str(len(index_list)))
 
 for index in index_list:
-    if index == 0:
-        folders.append(all_folders[index])
+    # if index == 0:
+    folders.append(all_folders[index])
 print(folders)
 
 p = [-50.0, 150.0, -250.0, 150.0]
@@ -122,9 +122,9 @@ def load_pc_file(filename):
     # returns Nx3 matrix
     # scale the original pointcloud 
     pc = load_lidar_file_nclt(os.path.join("/media/mav-lab/1T/Data/Datasets/NCLT/NCLT/", filename))
-    pc[:,0] = pc[:,0] / np.max(pc[:,0] + 1e-15) - 0.0001
-    pc[:,1] = pc[:,1] / np.max(pc[:,1] + 1e-15) - 0.0001
-    pc[:,2] = pc[:,2] / np.max(pc[:,2] + 1e-15) - 0.0001
+    # pc[:,0] = pc[:,0] / np.max(pc[:,0] + 1e-15) - 0.0001
+    # pc[:,1] = pc[:,1] / np.max(pc[:,1] + 1e-15) - 0.0001
+    # pc[:,2] = pc[:,2] / np.max(pc[:,2] + 1e-15) - 0.0001
 
     # !Debug
     # x = pc[...,0]
@@ -197,12 +197,6 @@ def construct_query_dict(df_centroids, filename, pickle_flag):
         print("Done ", filename)
 
 
-# Initialize pandas DataFrame
-df_train = pd.DataFrame(columns=['file','northing','easting','yaw'])
-df_test = pd.DataFrame(columns=['file','northing','easting','yaw'])
-df_all = pd.DataFrame(columns=['file','northing','easting','yaw'])
-
-
 for folder in folders:
     print(folder)
 
@@ -213,6 +207,11 @@ for folder in folders:
     else:
         save_flag = False
 
+
+    # Initialize pandas DataFrame
+    df_train = pd.DataFrame(columns=['file','northing','easting','yaw'])
+    df_test = pd.DataFrame(columns=['file','northing','easting','yaw'])
+    df_all = pd.DataFrame(columns=['file','northing','easting','yaw'])
     df_velo = pd.DataFrame(columns=['file','northing','easting','yaw'])
 
     # get groundtruth file and load it

@@ -69,7 +69,7 @@ void GPUTransformer::retreive(float* point_transformed) {
       pt_count = counter[sector_h[i] + ring_h[i] * h_num_sector + height_h[i] * h_num_sector * h_num_ring];
       point_transformed[3*(sector_h[i] + ring_h[i] * h_num_sector + height_h[i] * h_num_sector * h_num_ring + pt_count * h_num_sector * h_num_ring * h_num_height) + 0] = point_host[i];
       point_transformed[3*(sector_h[i] + ring_h[i] * h_num_sector + height_h[i] * h_num_sector * h_num_ring + pt_count * h_num_sector * h_num_ring * h_num_height) + 1] = point_host[i + d_size];
-      point_transformed[3*(sector_h[i] + ring_h[i] * h_num_sector + height_h[i] * h_num_sector * h_num_ring + pt_count * h_num_sector * h_num_ring * h_num_height) + 2] = point_host[i + 2*d_size];
+      point_transformed[3*(sector_h[i] + ring_h[i] * h_num_sector + height_h[i] * h_num_sector * h_num_ring + pt_count * h_num_sector * h_num_ring * h_num_height) + 2] = 1;
       counter[sector_h[i] + ring_h[i] * h_num_sector + height_h[i] * h_num_sector * h_num_ring] ++;
     }
   }

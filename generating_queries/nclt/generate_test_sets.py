@@ -155,7 +155,7 @@ def construct_query_and_database_sets(base_path, runs_folder, folders, pointclou
                     [[test_sets[j][key]["northing"],test_sets[j][key]["easting"]]])
                 
                 # get pointcloud index within radius    
-                index = tree.query_radius(coor, r=3)
+                index = tree.query_radius(coor, r=1.5)
                 
                 # indices of the positive matches in database i of each query (key) in test set j
                 test_sets[j][key][i] = index[0].tolist()
