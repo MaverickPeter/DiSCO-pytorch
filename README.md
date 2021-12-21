@@ -104,7 +104,7 @@ Take a look at train_DiSCO.py and evaluate.py for more parameters
 
 ## Pretrained Model on NCLT dataset
 ```
-https://drive.google.com/file/d/1YW0Pr4w-BPnRp7DeMvn-ZY92vRkd9WwG/view?usp=sharing
+Coming soon
 ```
 
 ## Acknowledgements
