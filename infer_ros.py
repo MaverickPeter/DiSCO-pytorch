@@ -211,8 +211,7 @@ if __name__ == "__main__":
     cfg.INPUT_TYPE = FLAGS.input_type
 
     #### load model
-    model = SC.DiSCO(global_feat=True, feature_transform=True, max_pool=False,
-                                    output_dim=cfg.FEATURE_OUTPUT_DIM, num_points=cfg.NUM_POINTS)
+    model = SC.DiSCO(output_dim=cfg.FEATURE_OUTPUT_DIM)
     corr2soft = SC.Corr2Softmax(200., 0.)
     corr2soft = corr2soft.to(device)
     model = model.to(device)
