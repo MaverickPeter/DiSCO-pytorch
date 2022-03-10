@@ -103,9 +103,9 @@ Take a look at train_DiSCO.py and evaluate.py for more parameters
 **We found that our model also works well in cpu, only takes 50-80ms an inference.**
 
 ## Pretrained Model on NCLT dataset
-```
-Coming soon
-```
+
+[NCLT occupancy model](https://drive.google.com/file/d/1wCN537_cMCJ0NSjtWJ8_9w-dxNUvyHr4/view?usp=sharing)
+
 
 ## Acknowledgements
 
