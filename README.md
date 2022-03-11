@@ -104,7 +104,7 @@ Take a look at train_DiSCO.py and evaluate.py for more parameters
 
 ## Pretrained Model on NCLT dataset
 
-[NCLT occupancy model](https://drive.google.com/file/d/1wCN537_cMCJ0NSjtWJ8_9w-dxNUvyHr4/view?usp=sharing)
+[NCLT occupancy model](https://drive.google.com/file/d/1yGFtNUavJT0kxS_mtYAE8U3FzOTpt3c4/view?usp=sharing)
 
 
 ## Acknowledgements
