@@ -106,7 +106,7 @@ def load_lidar_file_nclt(file_path):
         s = "%5.3f, %5.3f, %5.3f, %d, %d" % (x, y, z, i, l)
 
         # filter and normalize the point cloud to -1 ~ 1
-        if np.abs(x) < 70. and z > -20. and z < -2. and np.abs(y) < 70. and not(np.abs(x) < 5. and np.abs(y) < 5.):
+        if np.abs(x) < 70. and z > -20. and z < -2. and np.abs(y) < 70. and not(np.abs(x) < 1. and np.abs(y) < 1.):
             hits += [[x/70., y/70., z/20.]]
 
     f_bin.close()
