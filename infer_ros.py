@@ -1,4 +1,3 @@
-#!/home/mav-lab/miniconda3/envs/rostorch/bin/python3
 import os
 import cv2
 import sys

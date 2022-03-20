@@ -17,13 +17,15 @@ Video is available [here](https://youtu.be/SludumGuLYo).
 * tensorboardX
 * Cython (for point cloud process [voxelization](https://github.com/ZJU-Robotics-Lab/Voxelization_API.git))
 
+You can simply use 'pip install -r requirements.txt' to install required libraries.
+
 If you want to integrate it into **ROS**. We have test it on **Kinetic and Melodic**
 
 ## How to use
 
 ### prepare training data
 
-For NCLT dataset, if you want to use our code for convenience you have to form the data into this file structure. **(occ_xm is empty)**
+For NCLT dataset, if you want to use our code for convenience you have to form the data into this file structure. **(occ_xm is an empty folder)**
 
 ```
 ├── 2012-02-04
@@ -36,6 +38,8 @@ For NCLT dataset, if you want to use our code for convenience you have to form t
 │   ├── occ_3m
 │   └── velodyne_data
 │       └── velodyne_sync
+...
+(You need at least 4 rounds)
 ```
 
 In [generating_queries](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries)/[nclt](https://github.com/MaverickPeter/DiSCO-pytorch/tree/main/generating_queries/nclt)/
