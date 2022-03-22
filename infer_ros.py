@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import cv2
 import sys
@@ -15,7 +16,7 @@ import torch.nn as nn
 import scipy.io as scio
 import models.DiSCO as SC
 import loss.loss_function
-from disco_ros.msg import DiSCO
+from dislam_msgs.msg import DiSCO
 from torch.backends import cudnn
 from loading_pointclouds import *
 from torch.autograd import Variable
