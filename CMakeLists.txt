@@ -3,11 +3,6 @@ project(disco_ros)
 
 find_package(catkin REQUIRED COMPONENTS roscpp rospy message_generation std_msgs geometry_msgs sensor_msgs)
 
-add_message_files(
-  FILES
-  DiSCO.msg
-)
-
 #catkin_python_setup()
 
 generate_messages(
